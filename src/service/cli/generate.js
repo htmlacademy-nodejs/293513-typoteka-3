@@ -63,7 +63,7 @@ const generateOffers = (count) => {
     title: TITLES[getRandomInt(0, TITLES.length - 1)],
     announce: shuffle(SENTENCES).slice(0, getRandomInt(1, 5)).join(` `),
     fullText: shuffle(SENTENCES).slice(0, getRandomInt(5, SENTENCES.length - 1)).join(` `),
-    createdDate: getRandomDate(),
+    createdDate: getRandomDate().toISOString(),
     category: shuffle(CATEGORIES).slice(0, getRandomInt(1, CATEGORIES.length - 1)),
   }));
 }

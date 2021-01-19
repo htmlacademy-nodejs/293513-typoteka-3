@@ -1,7 +1,5 @@
 'use strict';
 
-const format = require(`date-fns/format`);
-
 const getRandomInt = (min, max) => {
   min = Math.ceil(min);
   max = Math.floor(max);
@@ -18,14 +16,8 @@ const shuffle = (someArray) => {
 };
 
 const getRandomDate = () => {
-  const date = new Date();
-  date.setMonth(date.getMonth() - getRandomInt(0, 3));
-  date.setDate(getRandomInt(1, date.getDate()));
-  date.setHours(getRandomInt(0, 23));
-  date.setMinutes(getRandomInt(0, 59));
-  date.setSeconds(getRandomInt(0, 59));
-
-  return format(date, 'yyyy-MM-dd HH:mm:ss');
+  const threeMonthMs = 1000 * 60 * 60 * 24 * 30 * 3;
+  return new Date(Date.now() - getRandomInt(0, threeMonthMs));
 };
 
 module.exports = {
