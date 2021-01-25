@@ -24,4 +24,4 @@ module.exports = {
   getRandomInt,
   shuffle,
   getRandomDate,
-}
+};

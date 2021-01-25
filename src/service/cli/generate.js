@@ -29,7 +29,7 @@ const generateOffers = (count, titles, categories, sentences) => {
     createdDate: getRandomDate().toISOString(),
     category: shuffle(categories).slice(0, getRandomInt(1, categories.length - 1)),
   }));
-}
+};
 
 module.exports = {
   name: `--generate`,
@@ -56,4 +56,4 @@ module.exports = {
       process.exit(ExitCode.ERROR);
     }
   }
-}
+};
