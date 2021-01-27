@@ -22,6 +22,6 @@ app.use(`/my`, myRoutes);
 app.use(`/articles`, articlesRoutes);
 
 app.use((req, res) => res.status(400).render(`errors/400`));
-app.use((err, req, res) => res.status(500).render(`errors/500`));
+app.use((err, req, res, next) => res.status(500).render(`errors/500`));
 
 app.listen(DEFAULT_PORT, () => console.log(`Server is running on the port ${DEFAULT_PORT}`));
