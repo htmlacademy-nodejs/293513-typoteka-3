@@ -1,0 +1,6 @@
+mixin searchText(article, text)
+  - let index = article.title.toLowerCase().indexOf(text)
+  a.search__link(href=`/articles/${article.id}`)
+    | #{article.title.slice(0, index)}
+    b= article.title.slice(index, index + text.length)
+    | #{article.title.slice(index + text.length)}
