@@ -2,7 +2,7 @@
 
 const express = require(`express`);
 const {HttpCode, ExitCode, API_PREFIX} = require(`../../constants`);
-const routes = require(`../api`);
+const routes = require(`../api/api`);
 const getMockData = require(`../lib/get-mock-data`);
 const {getLogger} = require(`../lib/logger`);
 
