@@ -1,0 +1,4 @@
+mixin dateTime(dateTime)
+  time(class!=attributes.class, datetime=date)
+    | #{new Date(date).toLocaleDateString(`ru`)}
+    | #{new Date(date).toLocaleTimeString(`ru`).slice(0, -3)}

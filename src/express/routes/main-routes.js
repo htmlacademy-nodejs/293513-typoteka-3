@@ -2,7 +2,7 @@
 
 const {Router} = require(`express`);
 const api = require(`../api`).getAPI();
-const asyncMiddleware = require(`../middlewares/asyncMiddleware`);
+const asyncMiddleware = require(`../middlewares/async-middleware`);
 
 const mainRouter = new Router();
 
@@ -17,8 +17,8 @@ mainRouter.get(`/login`, (req, res) => res.render(`login`));
 mainRouter.get(`/search`, async (req, res) => {
   try {
     const {search} = req.query;
-    const results = await api.search(search);
-    res.render(`search`, {results, search});
+    const results = await api.search(search.toLowerCase());
+    res.render(`search`, {results, search: search.toLowerCase()});
   } catch (err) {
     res.render(`search`, {results: [], search: req.query.search});
   }

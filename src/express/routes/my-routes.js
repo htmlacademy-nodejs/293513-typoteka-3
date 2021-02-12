@@ -2,7 +2,7 @@
 
 const {Router} = require(`express`);
 const api = require(`../api`).getAPI();
-const asyncMiddleware = require(`../middlewares/asyncMiddleware`);
+const asyncMiddleware = require(`../middlewares/async-middleware`);
 
 const myRouter = new Router();
 

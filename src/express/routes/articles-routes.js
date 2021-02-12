@@ -5,7 +5,7 @@ const multer = require(`multer`);
 const path = require(`path`);
 const {nanoid} = require(`nanoid`);
 const api = require(`../api`).getAPI();
-const asyncMiddleware = require(`../middlewares/asyncMiddleware`);
+const asyncMiddleware = require(`../middlewares/async-middleware`);
 
 const UPLOAD_DIR = `../upload/img`;
 const uploadDirAbsolute = path.resolve(__dirname, UPLOAD_DIR);

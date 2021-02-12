@@ -148,7 +148,7 @@ describe(`API returns articles based on search query`, () => {
     response = await request(app)
       .get(`/search`)
       .query({
-        query: `Ёлки`,
+        query: `Ёлки`.toLowerCase(),
       });
   });
 
