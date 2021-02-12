@@ -9,8 +9,8 @@
     "eslint": "eslint --ext .js src/",
     "start": "cross-env LOG_LEVEL=error NODE_ENV=production node ./src/service/service.js",
     "start::debug": "cross-env LOG_LEVEL=debug NODE_ENV=development node ./src/service/service.js",
-    "server": "nodemon ./src/service/service.js --server 3000",
-    "start-front-server": "nodemon src/express/server.js"
+    "server": "cross-env LOG_LEVEL=error NODE_ENV=production nodemon ./src/service/service.js --server 3000",
+    "start-front-server": "cross-env LOG_LEVEL=debug NODE_ENV=development nodemon src/express/server.js"
   },
   "repository": {
     "type": "git",
