@@ -30,10 +30,8 @@ app.use((err, req, res, _next) => {
   res.status(HttpCode.INTERNAL_SERVER_ERROR).render(`errors/500`);
 });
 
-app.listen(DEFAULT_PORT, (err) => {
-  if (err) {
-    return logger.error(`An error occurred on server created ${err.message}`);
-  }
-
-  return logger.info(`Listening to connection on ${DEFAULT_PORT}`);
+app.listen(DEFAULT_PORT, () => {
+  logger.info(`Listening to connection on ${DEFAULT_PORT}`);
+}).on(`error`, (err) => {
+  logger.error(`An error occurred on server created ${err.message}`);
 });
