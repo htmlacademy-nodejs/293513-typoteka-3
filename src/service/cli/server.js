@@ -1,7 +1,7 @@
 'use strict';
 
 const express = require(`express`);
-const {HttpCode, ExitCode, API_PREFIX} = require(`../../constants`);
+const {HttpCode, ExitCode, FilePath} = require(`../../constants`);
 const routes = require(`../api/api`);
 const getMockData = require(`../lib/get-mock-data`);
 const {getLogger} = require(`../lib/logger`);
@@ -28,7 +28,7 @@ module.exports = {
       next();
     });
 
-    app.use(API_PREFIX, routes(mockData));
+    app.use(FilePath.API_PREFIX, routes(mockData));
 
     app.use((req, res) => {
       res.status(HttpCode.NOT_FOUND).send(`Not found`);

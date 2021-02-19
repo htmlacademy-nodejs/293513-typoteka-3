@@ -6,13 +6,9 @@ const {getRandomInt, shuffle, getRandomDate} = require(`../../utils`);
 const {
   ExitCode,
   MAX_COMMENTS,
-  FILE_NAME_FILL_DB,
-  DEFAULT_COUNT_ARTICLES,
-  MAX_COUNT_ARTICLES,
-  FILE_SENTENCES_PATH,
-  FILE_TITLES_PATH,
-  FILE_CATEGORIES_PATH,
-  FILE_COMMENTS_PATH,
+  CountArticles,
+  FileName,
+  FilePath
 } = require(`../../constants`);
 
 const readContent = async (filePath) => {
@@ -43,17 +39,17 @@ const generateArticles = (count, titles, categoryCount, userCount, sentences, co
     announce: shuffle(sentences).slice(0, getRandomInt(1, 5)).join(` `),
     fullText: shuffle(sentences).slice(0, getRandomInt(5, sentences.length - 1)).join(` `),
     category: [getRandomInt(1, categoryCount)],
-    comments: generateComments(getRandomInt(1, MAX_COMMENTS), index + 1, userCount, comments),
+    comments: generateComments(getRandomInt(2, MAX_COMMENTS), index + 1, userCount, comments),
   }));
 };
 
 module.exports = {
   name: `--fill`,
   async run(args) {
-    const titles = await readContent(FILE_TITLES_PATH);
-    const categories = await readContent(FILE_CATEGORIES_PATH);
-    const sentences = await readContent(FILE_SENTENCES_PATH);
-    const commentSentences = await readContent(FILE_COMMENTS_PATH);
+    const titles = await readContent(FilePath.TITLES);
+    const categories = await readContent(FilePath.CATEGORIES);
+    const sentences = await readContent(FilePath.SENTENCES);
+    const commentSentences = await readContent(FilePath.COMMENTS);
 
     const users = [
       {
@@ -73,9 +69,9 @@ module.exports = {
     ];
 
     const [count] = args;
-    const countArticles = Number.parseInt(count, 10) || DEFAULT_COUNT_ARTICLES;
+    const countArticles = Number.parseInt(count, 10) || CountArticles.DEFAULT;
 
-    if (countArticles > MAX_COUNT_ARTICLES) {
+    if (countArticles > CountArticles.MAX) {
       console.info(chalk.red(`Не больше 1000 объявлений`));
       return;
     }
@@ -126,7 +122,7 @@ ALTER TABLE article_category ENABLE TRIGGER ALL;
     `.trim();
 
     try {
-      await fs.writeFile(FILE_NAME_FILL_DB, content);
+      await fs.writeFile(FileName.FILL_DB, content);
       console.log(chalk.green(`Operation success. File created.`));
     } catch (err) {
       console.error(chalk.red(`Can't write data to file...`));
