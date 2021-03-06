@@ -12,6 +12,9 @@ Thumbs.db
 node_modules/
 mocks.json
 
+# Файл с переменными окружения
+.env
+
 # Папка с собранными файлами проекта
 build/
 
