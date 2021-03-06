@@ -1,22 +1,21 @@
 'use strict';
 
-module.exports.DEFAULT_COMMAND = `--help`;
+const DEFAULT_COMMAND = `--help`;
+const USER_ARGV_INDEX = 2;
+const MAX_COMMENTS = 4;
+const MAX_ID_LENGTH = 6;
 
-module.exports.USER_ARGV_INDEX = 2;
-module.exports.MAX_COMMENTS = 4;
-module.exports.MAX_ID_LENGTH = 6;
-
-module.exports.CountArticles = {
+const CountArticles = {
   DEFAULT: 1,
   MAX: 1000,
 };
 
-module.exports.FileName = {
+const FileName = {
   MOCKS: `mocks.json`,
   FILL_DB: `fill-db.sql`,
 };
 
-module.exports.FilePath = {
+const FilePath = {
   SENTENCES: `./data/sentences.txt`,
   TITLES: `./data/titles.txt`,
   CATEGORIES: `./data/categories.txt`,
@@ -24,12 +23,12 @@ module.exports.FilePath = {
   API_PREFIX: `/api`,
 };
 
-module.exports.ExitCode = {
+const ExitCode = {
   ERROR: 1,
   SUCCESS: 0,
 };
 
-module.exports.HttpCode = {
+const HttpCode = {
   OK: 200,
   CREATED: 201,
   NOT_FOUND: 404,
@@ -37,7 +36,20 @@ module.exports.HttpCode = {
   INTERNAL_SERVER_ERROR: 500,
 };
 
-module.exports.Env = {
+const Env = {
   DEVELOPMENT: `development`,
   PRODUCTION: `production`,
+};
+
+module.exports = {
+  DEFAULT_COMMAND,
+  USER_ARGV_INDEX,
+  MAX_COMMENTS,
+  MAX_ID_LENGTH,
+  CountArticles,
+  FileName,
+  FilePath,
+  ExitCode,
+  HttpCode,
+  Env,
 };

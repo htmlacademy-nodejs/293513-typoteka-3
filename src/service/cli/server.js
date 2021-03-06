@@ -5,6 +5,7 @@ const {HttpCode, ExitCode, FilePath} = require(`../../constants`);
 const routes = require(`../api/api`);
 const getMockData = require(`../lib/get-mock-data`);
 const {getLogger} = require(`../lib/logger`);
+const sequelize = require(`../lib/sequelize`);
 
 module.exports = {
   name: `--server`,
@@ -13,6 +14,15 @@ module.exports = {
 
     const mockData = await getMockData();
     const logger = getLogger({name: `api`});
+
+    try {
+      logger.info(`Trying to connect to database...`);
+      await sequelize.authenticate();
+      logger.info(`Connection to database established`);
+    } catch (err) {
+      logger.error(`An error occurred: ${err.message}`);
+      process.exit(ExitCode.ERROR);
+    }
 
     const app = express();
 
