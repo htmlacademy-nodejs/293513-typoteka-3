@@ -1,31 +1,32 @@
 'use strict';
 
-const {nanoid} = require(`nanoid`);
 const fs = require(`fs`).promises;
 const chalk = require(`chalk`);
-const {getRandomInt, shuffle, getRandomDate} = require(`../../utils`);
+const {getRandomInt, shuffle} = require(`../../utils`);
 const {
   ExitCode,
-  MAX_ID_LENGTH,
   MAX_COMMENTS,
   FilePath,
-  FileName,
   CountArticles
 } = require(`../../constants`);
+const {getLogger} = require(`../lib/logger`);
+const sequelize = require(`../lib/sequelize`);
+const initDb = require(`../lib/init-db`);
+
+const logger = getLogger({name: `filldb`});
 
 const readContent = async (filePath) => {
   try {
     const content = await fs.readFile(filePath, `utf8`);
     return content.trim().split(`\n`);
   } catch (err) {
-    console.error(chalk.red(err));
+    logger.error(`Error when reading file: ${err.message}`);
     return [];
   }
 };
 
 const generateComments = (count, comments) => (
   Array(count).fill({}).map(() => ({
-    id: nanoid(MAX_ID_LENGTH),
     text: shuffle(comments)
       .slice(0, getRandomInt(1, comments.length))
       .join(` `),
@@ -34,19 +35,27 @@ const generateComments = (count, comments) => (
 
 const generateArticles = (count, titles, categories, sentences, comments) => {
   return Array(count).fill({}).map(() => ({
-    id: nanoid(MAX_ID_LENGTH),
     title: titles[getRandomInt(0, titles.length - 1)],
     announce: shuffle(sentences).slice(0, getRandomInt(1, 5)).join(` `),
     fullText: shuffle(sentences).slice(0, getRandomInt(5, sentences.length - 1)).join(` `),
-    createdAt: getRandomDate().toISOString(),
     category: shuffle(categories).slice(0, getRandomInt(1, categories.length - 1)),
     comments: generateComments(getRandomInt(1, MAX_COMMENTS), comments),
   }));
 };
 
 module.exports = {
-  name: `--generate`,
+  name: `--filldb`,
   async run(args) {
+    try {
+      logger.info(`Trying to connect to database...`);
+      await sequelize.authenticate();
+    } catch (err) {
+      logger.error(`An error occurred: ${err.message}`);
+      process.exit(ExitCode.ERROR);
+    }
+
+    logger.info(`Connection to database established`);
+
     const titles = await readContent(FilePath.TITLES);
     const categories = await readContent(FilePath.CATEGORIES);
     const sentences = await readContent(FilePath.SENTENCES);
@@ -60,14 +69,9 @@ module.exports = {
       return;
     }
 
-    const content = JSON.stringify(generateArticles(countArticles, titles, categories, sentences, comments), null, 2);
+    const articles = generateArticles(countArticles, titles, categories, sentences, comments);
 
-    try {
-      await fs.writeFile(FileName.MOCKS, content);
-      console.log(chalk.green(`Operation success. File created.`));
-    } catch (err) {
-      console.error(chalk.red(`Can't write data to file...`));
-      process.exit(ExitCode.ERROR);
-    }
+    await initDb(sequelize, {articles, categories});
+    process.exit(ExitCode.SUCCESS);
   }
 };

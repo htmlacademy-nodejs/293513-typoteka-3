@@ -13,10 +13,10 @@ const define = (sequelize) => Article.init({
     type: DataTypes.STRING,
   },
   announce: {
-    type: DataTypes.STRING,
+    type: DataTypes.TEXT,
     allowNull: false,
   },
-  'full_text': {
+  fullText: {
     type: DataTypes.TEXT,
     allowNull: false,
   },
