@@ -13,6 +13,7 @@ const {
   DB_POLL_ACQUIRE,
   DB_POLL_IDLE,
 } = process.env;
+const {DbPoolConnection} = require(`../../constants`);
 
 const somethingIsNotDefined = [
   DB_HOST,
@@ -40,8 +41,8 @@ module.exports = new Sequelize(
     port: DB_PORT,
     dialect: `postgres`,
     pool: {
-      min: Number(DB_POOL_MIN_CONNECTION),
-      max: Number(DB_POOL_MAX_CONNECTION),
+      min: Number(DB_POOL_MIN_CONNECTION) || DbPoolConnection.MIN,
+      max: Number(DB_POOL_MAX_CONNECTION) || DbPoolConnection.MAX,
       acquire: DB_POLL_ACQUIRE,
       idle: DB_POLL_IDLE,
     },

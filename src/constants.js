@@ -41,6 +41,11 @@ const Env = {
   PRODUCTION: `production`,
 };
 
+const DbPoolConnection = {
+  MIN: 0,
+  MAX: 5,
+};
+
 module.exports = {
   DEFAULT_COMMAND,
   USER_ARGV_INDEX,
@@ -52,4 +57,5 @@ module.exports = {
   ExitCode,
   HttpCode,
   Env,
+  DbPoolConnection,
 };
