@@ -36,7 +36,7 @@ articlesRouter.post(`/add`, upload.single(`upload`), async (req, res) => {
     const articleData = {
       createdDate: body.date,
       title: body.title,
-      category: body.category || [],
+      categories: body.category || [],
       announce: body.announcement,
       fullText: body[`full-text`],
     };
@@ -61,6 +61,10 @@ articlesRouter.get(`/edit/:id`, asyncMiddleware(async (req, res) => {
   res.render(`edit-post`, {article, categories});
 }));
 
-articlesRouter.get(`/:id`, (req, res) => res.render(`post`));
+articlesRouter.get(`/:id`, async (req, res) => {
+  const {id} = req.params;
+  const article = await api.getArticleById(id, true);
+  res.render(`post`, {article});
+});
 
 module.exports = articlesRouter;
