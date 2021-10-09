@@ -3,7 +3,6 @@
 const express = require(`express`);
 const {HttpCode, ExitCode, FilePath} = require(`../../constants`);
 const routes = require(`../api/api`);
-const getMockData = require(`../lib/get-mock-data`);
 const {getLogger} = require(`../lib/logger`);
 const sequelize = require(`../lib/sequelize`);
 
@@ -12,7 +11,6 @@ module.exports = {
   async run(args) {
     const DEFAULT_PORT = 3000;
 
-    const mockData = await getMockData();
     const logger = getLogger({name: `api`});
 
     try {
@@ -38,7 +36,7 @@ module.exports = {
       next();
     });
 
-    app.use(FilePath.API_PREFIX, routes(mockData));
+    app.use(FilePath.API_PREFIX, routes());
 
     app.use((req, res) => {
       res.status(HttpCode.NOT_FOUND).send(`Not found`);
