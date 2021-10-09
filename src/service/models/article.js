@@ -18,7 +18,6 @@ const define = (sequelize) => Article.init({
   },
   fullText: {
     type: DataTypes.TEXT,
-    allowNull: false,
   },
 }, {
   sequelize,

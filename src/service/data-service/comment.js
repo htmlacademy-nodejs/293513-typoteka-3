@@ -21,9 +21,9 @@ class CommentService {
   }
 
   async create(articleId, comment) {
-    return this._Comment.create({
-      ...articleId,
-      comment,
+    return await this._Comment.create({
+      articleId,
+      ...comment,
     });
   }
 }
