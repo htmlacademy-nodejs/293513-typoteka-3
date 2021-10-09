@@ -2,7 +2,7 @@
 
 const Alias = {
   ARTICLES: `articles`,
-  ARTICLE_CATEGORY: `article_category`,
+  ARTICLE_CATEGORIES: `articleCategories`,
   CATEGORIES: `categories`,
   COMMENTS: `comments`,
   USERS: `users`,

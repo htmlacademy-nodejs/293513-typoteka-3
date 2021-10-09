@@ -4,7 +4,12 @@ const {Router} = require(`express`);
 const article = require(`./article`);
 const category = require(`./category`);
 const search = require(`./search`);
-const {ArticleService, CommentService, CategoryService, SearchService} = require(`../data-service`);
+const {
+  ArticleService,
+  CommentService,
+  CategoryService,
+  SearchService
+} = require(`../data-service`);
 
 module.exports = (mockData) => {
   const app = new Router();

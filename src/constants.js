@@ -4,6 +4,7 @@ const DEFAULT_COMMAND = `--help`;
 const USER_ARGV_INDEX = 2;
 const MAX_COMMENTS = 4;
 const MAX_ID_LENGTH = 6;
+const ARTICLE_PER_PAGE = 8;
 
 const CountArticles = {
   DEFAULT: 1,
@@ -51,6 +52,7 @@ module.exports = {
   USER_ARGV_INDEX,
   MAX_COMMENTS,
   MAX_ID_LENGTH,
+  ARTICLE_PER_PAGE,
   CountArticles,
   FileName,
   FilePath,
