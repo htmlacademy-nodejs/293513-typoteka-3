@@ -7,10 +7,10 @@ class ArticleService {
     this._Article = sequelize.models.Article;
   }
 
-  async findAll(needComment) {
+  async findAll(needComments) {
     const include = [Alias.CATEGORIES];
 
-    if (needComment) {
+    if (needComments) {
       include.push(Alias.COMMENTS);
     }
 
@@ -24,21 +24,27 @@ class ArticleService {
     return articles.map((article) => article.get());
   }
 
-  async findOne(id, needComment) {
+  async findOne(id, needComments) {
     const include = [Alias.CATEGORIES];
 
-    if (needComment) {
+    if (needComments) {
       include.push(Alias.COMMENTS);
     }
 
     return await this._Article.findByPk(id, {include});
   }
 
-  async findPage({limit, offset}) {
+  async findPage({limit, offset, comments}) {
+    const include = [Alias.CATEGORIES];
+
+    if (comments) {
+      include.push(Alias.COMMENTS);
+    }
+
     const {count, rows} = await this._Article.findAndCountAll({
       limit,
       offset,
-      include: [Alias.CATEGORIES],
+      include,
       order: [
         [`createdAt`, `DESC`],
       ],

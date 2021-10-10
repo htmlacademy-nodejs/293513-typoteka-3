@@ -17,12 +17,20 @@ module.exports = (app, articleService, commentService) => {
     let result;
 
     if (limit || offset) {
-      result = await articleService.findPage({limit, offset});
+      result = await articleService.findPage({limit, offset, comments});
     } else {
       result = await articleService.findAll(comments);
     }
 
     res.status(HttpCode.OK).json(result);
+  });
+
+  route.get(`/comments`, async (req, res) => {
+    const {count} = req.query;
+
+    const comments = await commentService.findAll(count);
+
+    res.status(HttpCode.OK).json(comments);
   });
 
   route.get(`/:articleId`, async (req, res) => {
@@ -70,7 +78,7 @@ module.exports = (app, articleService, commentService) => {
   route.get(`/:articleId/comments`, articleExists(articleService), async (req, res) => {
     const {articleId} = req.params;
 
-    const comments = await commentService.findAll(articleId);
+    const comments = await commentService.findAllByArticleId(articleId);
 
     res.status(HttpCode.OK).json(comments);
   });

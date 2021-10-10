@@ -12,17 +12,21 @@ mainRouter.get(`/`, asyncMiddleware(async (req, res) => {
   const limit = ARTICLE_PER_PAGE;
   const offset = (Number(page) - 1) * ARTICLE_PER_PAGE;
 
-  const [
-    {count, articles},
-    categories
-  ] = await Promise.all([
-    api.getArticles({limit, offset}),
+  const [{count, articles}, categories, comments] = await Promise.all([
+    api.getArticles({offset, limit, comments: true}),
     api.getCategories(true),
+    api.getComments(4),
   ]);
 
-  const totalPage = Math.ceil(count / ARTICLE_PER_PAGE);
+  const totalPages = Math.ceil(count / ARTICLE_PER_PAGE);
 
-  res.render(`main`, {articles, page: Number(page), totalPage, categories});
+  res.render(`main`, {
+    articles,
+    page: Number(page),
+    totalPages,
+    categories,
+    comments,
+  });
 }));
 
 mainRouter.get(`/register`, (req, res) => res.render(`sign-up`));

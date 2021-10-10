@@ -1,0 +1,11 @@
+mixin shortText(text)
+  -
+    var length = text.length;
+    var result
+
+    if (length > 100) {
+      result = text
+    } else {
+      result = `${text.slice(0, 100)}...`
+    }
+  | #{result}

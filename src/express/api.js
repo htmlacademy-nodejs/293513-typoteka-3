@@ -44,6 +44,12 @@ class API {
     });
   }
 
+  getComments(count) {
+    return this._load(`/articles/comments`, {
+      params: {count}
+    });
+  }
+
   search(query) {
     return this._load(`/search`, {params: {query}});
   }

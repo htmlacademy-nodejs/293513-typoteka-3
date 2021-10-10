@@ -5,7 +5,21 @@ class CommentService {
     this._Comment = sequelize.models.Comment;
   }
 
-  async findAll(articleId) {
+  async findAll(count) {
+    const options = {
+      order: [
+        [`createdAt`, `DESC`]
+      ],
+    };
+
+    if (count) {
+      options.limit = count;
+    }
+
+    return await this._Comment.findAll(options);
+  }
+
+  async findAllByArticleId(articleId) {
     return await this._Comment.findAll({
       where: {articleId},
       raw: true,
