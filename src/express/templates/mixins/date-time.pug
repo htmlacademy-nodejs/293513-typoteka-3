@@ -1,4 +1,4 @@
 mixin dateTime(dateTime)
-  time(class!=attributes.class, datetime=date)
-    | #{new Date(date).toLocaleDateString(`ru`)}
-    | #{new Date(date).toLocaleTimeString(`ru`).slice(0, -3)}
+  time(class!=attributes.class, datetime=dateTime)
+    | #{new Date(dateTime).toLocaleDateString(`ru`)}
+    | #{new Date(dateTime).toLocaleTimeString(`ru`).slice(0, -3)}

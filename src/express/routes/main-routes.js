@@ -3,15 +3,34 @@
 const {Router} = require(`express`);
 const api = require(`../api`).getAPI();
 const asyncMiddleware = require(`../middlewares/async-middleware`);
+const {ARTICLE_PER_PAGE} = require(`../../constants`);
 
 const mainRouter = new Router();
 
 mainRouter.get(`/`, asyncMiddleware(async (req, res) => {
-  const articles = await api.getArticles();
-  res.render(`main`, {articles});
+  const {page = 1} = req.query;
+  const limit = ARTICLE_PER_PAGE;
+  const offset = (Number(page) - 1) * ARTICLE_PER_PAGE;
+
+  const [{count, articles}, categories, comments] = await Promise.all([
+    api.getArticles({offset, limit, comments: true}),
+    api.getCategories(true),
+    api.getComments(4),
+  ]);
+
+  const totalPages = Math.ceil(count / ARTICLE_PER_PAGE);
+
+  res.render(`main`, {
+    articles,
+    page: Number(page),
+    totalPages,
+    categories,
+    comments,
+  });
 }));
 
 mainRouter.get(`/register`, (req, res) => res.render(`sign-up`));
+
 mainRouter.get(`/login`, (req, res) => res.render(`login`));
 
 mainRouter.get(`/search`, async (req, res) => {

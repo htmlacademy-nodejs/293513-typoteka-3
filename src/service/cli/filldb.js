@@ -38,7 +38,7 @@ const generateArticles = (count, titles, categories, sentences, comments) => {
     title: titles[getRandomInt(0, titles.length - 1)],
     announce: shuffle(sentences).slice(0, getRandomInt(1, 5)).join(` `),
     fullText: shuffle(sentences).slice(0, getRandomInt(5, sentences.length - 1)).join(` `),
-    category: shuffle(categories).slice(0, getRandomInt(1, categories.length - 1)),
+    categories: shuffle(categories).slice(0, getRandomInt(1, categories.length - 1)),
     comments: generateComments(getRandomInt(1, MAX_COMMENTS), comments),
   }));
 };
