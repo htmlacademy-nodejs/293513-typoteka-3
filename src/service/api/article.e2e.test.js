@@ -160,8 +160,8 @@ describe(`API returns an article with given id`, () => {
 
 describe(`API creates an article if data is valid`, () => {
   const newArticle = {
-    title: `Валидный заголовок`,
-    announce: `Валидный анонс`,
+    title: `Валидный заголовок очень валидный.`,
+    announce: `Валидный анонс очень валидный.`,
     categories: [1, 2],
   };
 
@@ -200,12 +200,42 @@ describe(`API refuses to create an article if data is invalid`, () => {
       await request(app).post(`/articles`).send(badArticle).expect(HttpCode.BAD_REQUEST);
     }
   });
+
+  test(`When field type is wrong response code is 400`, async () => {
+    const badArticles = [
+      {...newArticle, title: true},
+      {...newArticle, announce: 12345},
+      {...newArticle, categories: `Котики`}
+    ];
+
+    for (const badArticle of badArticles) {
+      await request(app)
+        .post(`/articles`)
+        .send(badArticle)
+        .expect(HttpCode.BAD_REQUEST);
+    }
+  });
+
+  test(`When field value is wrong response code is 400`, async () => {
+    const badArticles = [
+      {...newArticle, title: `Short title`},
+      {...newArticle, announce: `Short announce`},
+      {...newArticle, categories: []}
+    ];
+
+    for (const badArticle of badArticles) {
+      await request(app)
+        .post(`/articles`)
+        .send(badArticle)
+        .expect(HttpCode.BAD_REQUEST);
+    }
+  });
 });
 
 describe(`API changes existent article`, () => {
   const newArticle = {
-    title: `Валидный заголовок`,
-    announce: `Валидный анонс`,
+    title: `Валидный заголовок очень валидный.`,
+    announce: `Валидный анонс очень валидный.`,
     categories: [2],
   };
 
@@ -220,14 +250,14 @@ describe(`API changes existent article`, () => {
   test(`Status code 200`, () => expect(response.statusCode).toBe(HttpCode.OK));
   test(`Article is really changed`, async () => {
     await request(app).get(`/articles/1`)
-      .expect((res) => expect(res.body.title).toBe(`Валидный заголовок`));
+      .expect((res) => expect(res.body.title).toBe(`Валидный заголовок очень валидный.`));
   });
 });
 
 test(`API returns status code 404 when trying to change non-existent article`, async () => {
   const newArticle = {
-    title: `Валидный заголовок`,
-    announce: `Валидный анонс`,
+    title: `Валидный заголовок очень валидный.`,
+    announce: `Валидный анонс очень валидный.`,
     categories: [1],
   };
 
