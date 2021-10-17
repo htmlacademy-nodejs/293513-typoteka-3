@@ -6,6 +6,7 @@ const path = require(`path`);
 const {nanoid} = require(`nanoid`);
 const api = require(`../api`).getAPI();
 const asyncMiddleware = require(`../middlewares/async-middleware`);
+const {prepareErrors} = require(`../../utils`);
 
 const UPLOAD_DIR = `../upload/img`;
 const uploadDirAbsolute = path.resolve(__dirname, UPLOAD_DIR);
@@ -48,7 +49,9 @@ articlesRouter.post(`/add`, upload.single(`upload`), async (req, res) => {
     await api.createArticle(articleData);
     res.redirect(`/my`);
   } catch (err) {
-    res.redirect(`back`);
+    const validationMessages = prepareErrors(err);
+    const categories = await api.getCategories();
+    res.render(`new-post`, {categories, validationMessages});
   }
 });
 
@@ -58,13 +61,56 @@ articlesRouter.get(`/edit/:id`, asyncMiddleware(async (req, res) => {
     api.getArticleById(id),
     api.getCategories(),
   ]);
-  res.render(`edit-post`, {article, categories});
+  res.render(`edit-post`, {id, article, categories});
 }));
+
+articlesRouter.put(`/edit/:id`, upload.single(`upload`), async (req, res) => {
+  const {body, file} = req;
+  const {id} = req.params;
+
+  try {
+    const articleData = {
+      createdDate: body.date,
+      title: body.title,
+      categories: body.category || [],
+      announce: body.announcement,
+      fullText: body[`full-text`],
+    };
+
+    if (file) {
+      articleData.picture = file.filename;
+    }
+
+    await api.editArticle(id, articleData);
+    res.redirect(`/my`);
+  } catch (err) {
+    const validationMessages = prepareErrors(err);
+    const [article, categories] = await Promise.all([
+      api.getArticleById(id),
+      api.getCategories(),
+    ]);
+    res.render(`edit-post`, {id, article, categories, validationMessages});
+  }
+});
 
 articlesRouter.get(`/:id`, async (req, res) => {
   const {id} = req.params;
   const article = await api.getArticleById(id, true);
-  res.render(`post`, {article});
+  res.render(`post`, {id, article});
+});
+
+articlesRouter.post(`/:id/comments`, async (req, res) => {
+  const {id} = req.params;
+  const {comment} = req.body;
+
+  try {
+    await api.createComment(id, comment);
+    res.redirect(`/articles/${id}`);
+  } catch (err) {
+    const validationMessages = prepareErrors(err);
+    const article = await api.getArticleById(id, true);
+    res.render(`post`, {id, article, validationMessages});
+  }
 });
 
 module.exports = articlesRouter;

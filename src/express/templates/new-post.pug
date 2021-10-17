@@ -1,4 +1,5 @@
 extends layout
+include mixins/error-message
 
 block content
   main
@@ -15,6 +16,7 @@ block content
                     label(for='new-publication-date' aria-label='Календарь')
                     input#new-publication-date(type='text' name='date' placeholder='2019-03-21')
               button.new-publication__button.button.button--colored(type='submit') Опубликовать
+            +errorMessages(validationMessages)
             a.popup__button.button.button--popup-close(aria-label='Закрыть окно')
               | Закрыть
               | окно
@@ -34,7 +36,7 @@ block content
                   each category, index in categories
                     .new-publication__checkbox.new-publication__checkbox--auto
                       input(id=`checkbox-auto-${index}` type='checkbox' name='category[]')
-                      label(for=`checkbox-auto-${index}`)= category
+                      label(for=`checkbox-auto-${index}`)= category.name
                   a.new-publication__form-link.button.button--transparent(href='/categories') Добавить категорию
               .form__wrapper.form__wrapper--text
                 .form__field.form__field--publication-text
