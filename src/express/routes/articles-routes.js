@@ -31,21 +31,21 @@ articlesRouter.get(`/add`, asyncMiddleware(async (req, res) => {
 }));
 
 articlesRouter.post(`/add`, upload.single(`upload`), async (req, res) => {
+  const {body, file} = req;
+
+  const articleData = {
+    createdDate: body.date,
+    title: body.title,
+    categories: body.category || [],
+    announce: body.announcement,
+    fullText: body.fullText,
+  };
+
+  if (file) {
+    articleData.picture = file.filename;
+  }
+
   try {
-    const {body, file} = req;
-
-    const articleData = {
-      createdDate: body.date,
-      title: body.title,
-      categories: body.category || [],
-      announce: body.announcement,
-      fullText: body[`full-text`],
-    };
-
-    if (file) {
-      articleData.picture = file.filename;
-    }
-
     await api.createArticle(articleData);
     res.redirect(`/my`);
   } catch (err) {
@@ -74,7 +74,7 @@ articlesRouter.put(`/edit/:id`, upload.single(`upload`), async (req, res) => {
       title: body.title,
       categories: body.category || [],
       announce: body.announcement,
-      fullText: body[`full-text`],
+      fullText: body.fullText,
     };
 
     if (file) {

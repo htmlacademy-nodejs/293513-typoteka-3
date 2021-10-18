@@ -9,7 +9,6 @@ const ErrorArticleMessage = {
   TITLE_MAX: `Заголовок не может содержать более 250 символов`,
   ANNOUNCE_MIN: `Анонс публикации содержит меньше 30 символов`,
   ANNOUNCE_MAX: `Анонс публикации не может содержать более 250 символов`,
-  FULL_TEXT_MIN: `Полный текст публикации содержит меньше 50 символов`,
   FULL_TEXT_MAX: `Полный текст публикации не может содержать более 1000 символов`,
 };
 
@@ -27,11 +26,11 @@ const schema = Joi.object({
     'string.min': ErrorArticleMessage.ANNOUNCE_MIN,
     'string.max': ErrorArticleMessage.ANNOUNCE_MAX,
   }),
-  fullText: Joi.string().min(50).max(1000).messages({
-    'string.min': ErrorArticleMessage.FULL_TEXT_MIN,
+  fullText: Joi.string().optional().allow('').max(1000).messages({
     'string.max': ErrorArticleMessage.FULL_TEXT_MAX,
   }),
   picture: Joi.string(),
+  createdDate: Joi.string(),
 });
 
 module.exports = (req, res, next) => {

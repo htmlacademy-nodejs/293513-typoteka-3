@@ -14,7 +14,8 @@ block content
                 .new-publication__date-form-division
                   .new-publication__date-block
                     label(for='new-publication-date' aria-label='Календарь')
-                    input#new-publication-date(type='text' name='date' placeholder='2019-03-21')
+                    input#new-publication-date(type='text' name='date'
+                      placeholder='2019-03-21')
               button.new-publication__button.button.button--colored(type='submit') Опубликовать
             +errorMessages(validationMessages)
             a.popup__button.button.button--popup-close(aria-label='Закрыть окно')
@@ -35,7 +36,9 @@ block content
                 .new-publication__category-wrapper
                   each category, index in categories
                     .new-publication__checkbox.new-publication__checkbox--auto
-                      input(id=`checkbox-auto-${index}` type='checkbox' name='category[]')
+                      input(id=`checkbox-auto-${index}` type='checkbox'
+                        value=`${category.id}`
+                        name='category[]')
                       label(for=`checkbox-auto-${index}`)= category.name
                   a.new-publication__form-link.button.button--transparent(href='/categories') Добавить категорию
               .form__wrapper.form__wrapper--text
@@ -44,4 +47,5 @@ block content
                     textarea(rows='5' name='announcement' placeholder='Анонс публикации')
                 .form__field.form__field--publication-text
                   label
-                    textarea(rows='10' name='full-text' placeholder='Полный текст публикации')
+                    textarea(rows='10' name='fullText' placeholder='Полный ' +
+                    'текст публикации')

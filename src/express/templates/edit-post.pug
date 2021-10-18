@@ -5,7 +5,7 @@ block content
     section
       .popup.popup--new-publication.popup--anti
         .new-publication
-          form(action='#' method='POST')
+          form(action=`/articles/edit/${id}` method='POST')
             .new-publication__header
               h1 Новая публикация
               .new-publication__date-form
@@ -13,7 +13,8 @@ block content
                 .new-publication__date-form-division
                   .new-publication__date-block
                     label(for='new-publication-date' aria-label='Календарь')
-                    input#new-publication-date(type='text' name='date' placeholder='2019-03-21' value=article.createdDate)
+                    input#new-publication-date(type='text' name='date'
+                      placeholder='2019-03-21' value=article.createdDate)
               button.new-publication__button.button.button--colored(type='submit') Опубликовать
             a.popup__button.button.button--popup-close(aria-label='Закрыть окно')
               | Закрыть
@@ -33,8 +34,13 @@ block content
                 .new-publication__category-wrapper
                   each category, index in categories
                     .new-publication__checkbox.new-publication__checkbox--auto
-                      input(id=`checkbox-auto-${index}` type='checkbox' name='category[]' checked=article.category.includes(category))
-                      label(for=`checkbox-auto-${index}`)= category
+                      -
+                        let checked = article.categories.find((it) => it.id
+                        === category.id)
+                      input(id=`checkbox-auto-${index}` type='checkbox'
+                        name='category[]' value=`${category.id}` checked=
+                      checked)
+                      label(for=`checkbox-auto-${index}`)= category.name
                   a.new-publication__form-link.button.button--transparent(href='/categories') Добавить категорию
               .form__wrapper.form__wrapper--text
                 .form__field.form__field--publication-text
@@ -42,4 +48,5 @@ block content
                     textarea(rows='5' name='announcement' placeholder='Анонс публикации')= article.announce
                 .form__field.form__field--publication-text
                   label
-                    textarea(rows='10' name='full-text' placeholder='Полный текст публикации')= article.fullText
+                    textarea(rows='10' name='fullText' placeholder='Полный ' +
+                    'текст публикации')= article.fullText
