@@ -64,23 +64,23 @@ articlesRouter.get(`/edit/:id`, asyncMiddleware(async (req, res) => {
   res.render(`edit-post`, {id, article, categories});
 }));
 
-articlesRouter.put(`/edit/:id`, upload.single(`upload`), async (req, res) => {
+articlesRouter.post(`/edit/:id`, upload.single(`upload`), async (req, res) => {
   const {body, file} = req;
   const {id} = req.params;
 
+  const articleData = {
+    createdDate: body.date,
+    title: body.title,
+    categories: body.category || [],
+    announce: body.announcement,
+    fullText: body.fullText,
+  };
+
+  if (file) {
+    articleData.picture = file.filename;
+  }
+
   try {
-    const articleData = {
-      createdDate: body.date,
-      title: body.title,
-      categories: body.category || [],
-      announce: body.announcement,
-      fullText: body.fullText,
-    };
-
-    if (file) {
-      articleData.picture = file.filename;
-    }
-
     await api.editArticle(id, articleData);
     res.redirect(`/my`);
   } catch (err) {

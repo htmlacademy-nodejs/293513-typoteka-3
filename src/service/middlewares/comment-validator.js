@@ -4,12 +4,14 @@ const Joi = require(`joi`);
 const {HttpCode} = require(`../../constants`);
 
 const ErrorCommentMessage = {
-  TEXT: `Комментарий содержит меньше 20 символов`
+  TEXT: `Комментарий содержит меньше 20 символов`,
+  TEXT_REQUIRED: `Комментарий не может быть пустым`
 };
 
 const schema = Joi.object({
   text: Joi.string().min(20).required().messages({
     'string.min': ErrorCommentMessage.TEXT,
+    'any.required': ErrorCommentMessage.TEXT_REQUIRED,
   }),
 });
 

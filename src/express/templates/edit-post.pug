@@ -1,11 +1,13 @@
 extends layout
+include mixins/error-message
 
 block content
   main
     section
       .popup.popup--new-publication.popup--anti
         .new-publication
-          form(action=`/articles/edit/${id}` method='POST')
+          form(action=`/articles/edit/${id}` method='post'
+            enctype='multipart/form-data')
             .new-publication__header
               h1 Новая публикация
               .new-publication__date-form
@@ -16,6 +18,7 @@ block content
                     input#new-publication-date(type='text' name='date'
                       placeholder='2019-03-21' value=article.createdDate)
               button.new-publication__button.button.button--colored(type='submit') Опубликовать
+            +errorMessages(validationMessages)
             a.popup__button.button.button--popup-close(aria-label='Закрыть окно')
               | Закрыть
               | окно
