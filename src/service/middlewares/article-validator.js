@@ -16,7 +16,7 @@ const schema = Joi.object({
   categories: Joi.array().items(
     Joi.number().integer().positive()
   ).min(1).required().messages({
-    'number.base': ErrorArticleMessage.CATEGORIES,
+    'array.min': ErrorArticleMessage.CATEGORIES,
   }),
   title: Joi.string().min(30).max(250).required().messages({
     'string.min': ErrorArticleMessage.TITLE_MIN,

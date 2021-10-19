@@ -6,7 +6,12 @@ block content
     section
       .popup.popup--new-publication.popup--anti
         .new-publication
-          form(action='/articles/add' method='post' enctype='multipart/form-data')
+          form(
+            action='/articles/add'
+            method='post'
+            enctype='multipart/form-data'
+            autocomplete="off"
+          )
             .new-publication__header
               h1 Новая публикация
               .new-publication__date-form
@@ -14,38 +19,82 @@ block content
                 .new-publication__date-form-division
                   .new-publication__date-block
                     label(for='new-publication-date' aria-label='Календарь')
-                    input#new-publication-date(type='text' name='date'
-                      placeholder='2019-03-21')
+                    input#new-publication-date(
+                      type='text'
+                      name='date'
+                      placeholder='2019-03-21'
+                    )
+
               button.new-publication__button.button.button--colored(type='submit') Опубликовать
-            +errorMessages(validationMessages)
+
+            if meta
+              +errorMessages(meta.error)
+
             a.popup__button.button.button--popup-close(aria-label='Закрыть окно')
               | Закрыть
               | окно
+
             .new-publication__form.form
               .form__wrapper.form__wrapper--intro
                 .form__field
                   label
-                    input(type='text' name='title' placeholder='Заголовок' required='')
+                    input(
+                      type='text'
+                      name='title'
+                      value=`${meta ? meta.article.title : ''}`
+                      placeholder='Заголовок'
+                      required='required'
+                    )
+
                 .form__field.form__field--post-image
+                  -
+                    let fileName = meta && meta.article
+                      ? meta.article.picture
+                      : ''
                   label
-                    input#image-name-field(type='text' name='photo' placeholder='Фотография' readonly='')
+                    input#image-name-field(
+                      type='text'
+                      name='photo'
+                      placeholder='Фотография'
+                      value= fileName
+                      readonly=''
+                    )
                   .form__image-loader.form__image-loader--publication
                     label
                       input.visually-hidden(type='file' name='upload')
                       | Обзор
+
                 .new-publication__category-wrapper
                   each category, index in categories
+                    -
+                      let checked = meta
+                        ? meta.article.categories
+                            .find((it) => +it === category.id)
+                        : false
                     .new-publication__checkbox.new-publication__checkbox--auto
-                      input(id=`checkbox-auto-${index}` type='checkbox'
+                      input(
+                        id=`checkbox-auto-${index}`
+                        type='checkbox'
                         value=`${category.id}`
-                        name='category[]')
+                        name='category[]'
+                        checked= checked
+                      )
                       label(for=`checkbox-auto-${index}`)= category.name
-                  a.new-publication__form-link.button.button--transparent(href='/categories') Добавить категорию
+                  a.new-publication__form-link.button.button--transparent(href='/categories')
+                    | Добавить категорию
+
               .form__wrapper.form__wrapper--text
                 .form__field.form__field--publication-text
                   label
-                    textarea(rows='5' name='announcement' placeholder='Анонс публикации')
+                    textarea(
+                      rows='5'
+                      name='announcement'
+                      placeholder='Анонс публикации'
+                    )= `${meta ? meta.article.announce : ''}`
                 .form__field.form__field--publication-text
                   label
-                    textarea(rows='10' name='fullText' placeholder='Полный ' +
-                    'текст публикации')
+                    textarea(
+                      rows='10'
+                      name='full-text'
+                      placeholder='Полный текст публикации'
+                    )= `${meta ? meta.article.fullText : ''}`

@@ -2,18 +2,47 @@
 
 const express = require(`express`);
 const path = require(`path`);
+const session = require(`express-session`);
+const SequelizeStore = require(`connect-session-sequelize`)(session.Store);
 
+const sequelize = require(`../service/lib/sequelize`);
 const mainRoutes = require(`./routes/main-routes`);
 const myRoutes = require(`./routes/my-routes`);
 const articlesRoutes = require(`./routes/articles-routes`);
 const {HttpCode} = require(`../constants`);
 const {getLogger} = require(`../service/lib/logger`);
 
+const {SESSION_SECRET} = process.env;
+
+if (!SESSION_SECRET) {
+  throw new Error(`SESSION_SECRET environment variable is not defined`);
+}
+
 const DEFAULT_PORT = 8080;
 const PUBLIC_DIR = `public`;
+const EXPIRATION_TIME = 180000;
+const CHECK_EXPIRATION_INTERVAL = 60000;
+
+const mySessionStore = new SequelizeStore({
+  db: sequelize,
+  expiration: EXPIRATION_TIME,
+  checkExpirationInterval: CHECK_EXPIRATION_INTERVAL,
+});
+
+sequelize.sync({force: false});
 
 const app = express();
 const logger = getLogger({name: `server`});
+
+app.use(express.urlencoded({extended: false}));
+
+app.use(session({
+  secret: SESSION_SECRET,
+  store: mySessionStore,
+  resave: false,
+  proxy: true,
+  saveUninitialized: false,
+}));
 
 app.set(`views`, path.resolve(__dirname, `templates`));
 app.set(`view engine`, `pug`);

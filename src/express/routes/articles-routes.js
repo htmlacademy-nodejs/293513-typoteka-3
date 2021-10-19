@@ -38,7 +38,7 @@ articlesRouter.post(`/add`, upload.single(`upload`), async (req, res) => {
     title: body.title,
     categories: body.category || [],
     announce: body.announcement,
-    fullText: body.fullText,
+    fullText: body[`full-text`],
   };
 
   if (file) {
@@ -51,7 +51,16 @@ articlesRouter.post(`/add`, upload.single(`upload`), async (req, res) => {
   } catch (err) {
     const validationMessages = prepareErrors(err);
     const categories = await api.getCategories();
-    res.render(`new-post`, {categories, validationMessages});
+
+    const meta = {
+      article: articleData,
+      error: validationMessages,
+    };
+
+    req.session.meta = meta;
+    req.session.save(() => {
+      res.render(`new-post`, {categories, meta});
+    });
   }
 });
 
@@ -85,11 +94,17 @@ articlesRouter.post(`/edit/:id`, upload.single(`upload`), async (req, res) => {
     res.redirect(`/my`);
   } catch (err) {
     const validationMessages = prepareErrors(err);
-    const [article, categories] = await Promise.all([
-      api.getArticleById(id),
-      api.getCategories(),
-    ]);
-    res.render(`edit-post`, {id, article, categories, validationMessages});
+    const categories = await api.getCategories();
+
+    const meta = {
+      article: articleData,
+      error: validationMessages,
+    };
+
+    req.session.meta = meta;
+    req.session.save(() => {
+      res.render(`edit-post`, {id, categories, meta});
+    });
   }
 });
 
@@ -109,7 +124,16 @@ articlesRouter.post(`/:id/comments`, async (req, res) => {
   } catch (err) {
     const validationMessages = prepareErrors(err);
     const article = await api.getArticleById(id, true);
-    res.render(`post`, {id, article, validationMessages});
+
+    const meta = {
+      comment,
+      error: validationMessages,
+    };
+
+    req.session.meta = meta;
+    req.session.save(() => {
+      res.render(`post`, {id, article, meta});
+    });
   }
 });
 

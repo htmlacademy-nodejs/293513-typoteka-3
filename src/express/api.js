@@ -19,8 +19,8 @@ class API {
 
   async _load(url, options) {
     try {
-      const response = await this._http.request(({url, ...options}));
-      return response.data;
+      const {data} = await this._http.request(({url, ...options}));
+      return data;
     } catch (e) {
       logger.error(e);
       throw e;
