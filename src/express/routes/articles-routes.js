@@ -82,7 +82,8 @@ articlesRouter.post(`/edit/:id`, upload.single(`upload`), async (req, res) => {
     title: body.title,
     categories: body.category || [],
     announce: body.announcement,
-    fullText: body.fullText,
+    fullText: body[`full-text`],
+    picture: '',
   };
 
   if (file) {
