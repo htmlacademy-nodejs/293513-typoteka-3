@@ -1,7 +1,10 @@
 'use strict';
 
 const axios = require(`axios`);
+const {HttpMethod} = require('../constants');
+const {getLogger} = require(`../service/lib/logger`);
 
+const logger = getLogger({name: `api`});
 const TIMEOUT = 5000;
 const port = process.env.API_PORT || 3000;
 const defaultURL = `http://localhost:${port}/api/`;
@@ -15,8 +18,13 @@ class API {
   }
 
   async _load(url, options) {
-    const response = await this._http.request(({url, ...options}));
-    return response.data;
+    try {
+      const {data} = await this._http.request(({url, ...options}));
+      return data;
+    } catch (e) {
+      logger.error(e);
+      throw e;
+    }
   }
 
   getArticles({offset, limit, comments} = {}) {
@@ -33,7 +41,14 @@ class API {
 
   createArticle(data) {
     return this._load(`/articles`, {
-      method: `POST`,
+      method: HttpMethod.POST,
+      data,
+    });
+  }
+
+  editArticle(id, data) {
+    return this._load(`/articles/${id}`, {
+      method: HttpMethod.PUT,
       data,
     });
   }
@@ -47,6 +62,13 @@ class API {
   getComments(count) {
     return this._load(`/articles/comments`, {
       params: {count}
+    });
+  }
+
+  createComment(id, data) {
+    return this._load(`/articles/${id}/comments`, {
+      method: HttpMethod.POST,
+      data,
     });
   }
 

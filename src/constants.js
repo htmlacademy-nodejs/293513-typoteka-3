@@ -47,6 +47,13 @@ const DbPoolConnection = {
   MAX: 5,
 };
 
+const HttpMethod = {
+  GET: `GET`,
+  POST: `POST`,
+  PUT: `PUT`,
+  DELETE: `DELETE`
+};
+
 module.exports = {
   DEFAULT_COMMAND,
   USER_ARGV_INDEX,
@@ -60,4 +67,5 @@ module.exports = {
   HttpCode,
   Env,
   DbPoolConnection,
+  HttpMethod,
 };

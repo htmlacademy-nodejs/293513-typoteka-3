@@ -20,8 +20,13 @@ const getRandomDate = () => {
   return new Date(Date.now() - getRandomInt(0, threeMonthMs));
 };
 
+const prepareErrors = (errors) => {
+  return errors.response.data.split(`\n`);
+};
+
 module.exports = {
   getRandomInt,
   shuffle,
   getRandomDate,
+  prepareErrors,
 };
