@@ -5,13 +5,36 @@ const Alias = require(`../models/alias`);
 class ArticleService {
   constructor(sequelize) {
     this._Article = sequelize.models.Article;
+    this._Comment = sequelize.models.Comment;
+    this._User = sequelize.models.User;
   }
 
   async findAll(needComments) {
-    const include = [Alias.CATEGORIES];
+    const include = [
+      Alias.CATEGORIES,
+      {
+        model: this._User,
+        as: Alias.USERS,
+        attributes: {
+          exclude: [`passwordHash`],
+        },
+      },
+    ];
 
     if (needComments) {
-      include.push(Alias.COMMENTS);
+      include.push({
+        model: this._Comment,
+        as: Alias.COMMENTS,
+        include: [
+          {
+            model: this._User,
+            as: Alias.USERS,
+            attributes: {
+              exclude: [`passwordHash`],
+            },
+          },
+        ],
+      });
     }
 
     const articles = await this._Article.findAll({
@@ -25,20 +48,62 @@ class ArticleService {
   }
 
   async findOne(id, needComments) {
-    const include = [Alias.CATEGORIES];
+    const include = [
+      Alias.CATEGORIES,
+      {
+        model: this._User,
+        as: Alias.USERS,
+        attributes: {
+          exclude: [`passwordHash`],
+        },
+      },
+    ];
 
     if (needComments) {
-      include.push(Alias.COMMENTS);
+      include.push({
+        model: this._Comment,
+        as: Alias.COMMENTS,
+        include: [
+          {
+            model: this._User,
+            as: Alias.USERS,
+            attributes: {
+              exclude: [`passwordHash`],
+            },
+          },
+        ],
+      });
     }
 
     return await this._Article.findByPk(id, {include});
   }
 
   async findPage({limit, offset, comments}) {
-    const include = [Alias.CATEGORIES];
+    const include = [
+      Alias.CATEGORIES,
+      {
+        model: this._User,
+        as: Alias.USERS,
+        attributes: {
+          exclude: [`passwordHash`],
+        },
+      },
+    ];
 
     if (comments) {
-      include.push(Alias.COMMENTS);
+      include.push({
+        model: this._Comment,
+        as: Alias.COMMENTS,
+        include: [
+          {
+            model: this._User,
+            as: Alias.USERS,
+            attributes: {
+              exclude: [`passwordHash`],
+            },
+          },
+        ],
+      });
     }
 
     const {count, rows} = await this._Article.findAndCountAll({

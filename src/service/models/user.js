@@ -1,35 +1,44 @@
 'use strict';
 
 const {Model, DataTypes} = require(`sequelize`);
+const Alias = require(`./alias`);
 
-class User extends Model {}
+const define = (sequelize) => {
+  class User extends Model {
+    static associate(models) {
+      User.hasMany(models.Article, {as: Alias.ARTICLES, foreignKey: `userId`});
+      User.hasMany(models.Comment, {as: Alias.COMMENTS, foreignKey: `userId`});
+    }
+  }
 
-const define = (sequelize) => User.init({
-  'first_name': {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  'last_name': {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  'password_hash': {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  'avatar': {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  'email': {
-    type: DataTypes.STRING,
-    allowNull: false,
-    unique: true,
-  },
-}, {
-  sequelize,
-  modelName: `User`,
-  tableName: 'users',
-});
+  User.init({
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    surname: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    passwordHash: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    avatar: {
+      type: DataTypes.STRING,
+    },
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+    },
+  }, {
+    sequelize,
+    modelName: `User`,
+    tableName: 'users',
+  });
+
+  return User;
+}
 
 module.exports = define;
