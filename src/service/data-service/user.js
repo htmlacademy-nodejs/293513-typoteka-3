@@ -18,3 +18,5 @@ class UserService {
     return user && user.get();
   }
 }
+
+module.exports = UserService;

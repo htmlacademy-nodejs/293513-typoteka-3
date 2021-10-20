@@ -12,6 +12,7 @@ const {
 const {getLogger} = require(`../lib/logger`);
 const sequelize = require(`../lib/sequelize`);
 const initDb = require(`../lib/init-db`);
+const {getMockUsers} = require(`../mockData`);
 
 const logger = getLogger({name: `filldb`});
 
@@ -25,21 +26,23 @@ const readContent = async (filePath) => {
   }
 };
 
-const generateComments = (count, comments) => (
+const generateComments = (count, comments, users) => (
   Array(count).fill({}).map(() => ({
+    user: users[getRandomInt(0, users.length - 1)].email,
     text: shuffle(comments)
       .slice(0, getRandomInt(1, comments.length))
       .join(` `),
   }))
 );
 
-const generateArticles = (count, titles, categories, sentences, comments) => {
+const generateArticles = (count, titles, categories, sentences, comments, users) => {
   return Array(count).fill({}).map(() => ({
+    user: users[getRandomInt(0, users.length - 1)].email,
     title: titles[getRandomInt(0, titles.length - 1)],
     announce: shuffle(sentences).slice(0, getRandomInt(1, 5)).join(` `),
     fullText: shuffle(sentences).slice(0, getRandomInt(5, sentences.length - 1)).join(` `),
     categories: shuffle(categories).slice(0, getRandomInt(1, categories.length - 1)),
-    comments: generateComments(getRandomInt(1, MAX_COMMENTS), comments),
+    comments: generateComments(getRandomInt(1, MAX_COMMENTS), comments, users),
   }));
 };
 
@@ -60,6 +63,7 @@ module.exports = {
     const categories = await readContent(FilePath.CATEGORIES);
     const sentences = await readContent(FilePath.SENTENCES);
     const comments = await readContent(FilePath.COMMENTS);
+    const users = await getMockUsers();
 
     const [count] = args;
     const countArticles = Number.parseInt(count, 10) || CountArticles.DEFAULT;
@@ -69,9 +73,16 @@ module.exports = {
       return;
     }
 
-    const articles = generateArticles(countArticles, titles, categories, sentences, comments);
+    const articles = generateArticles(
+      countArticles,
+      titles,
+      categories,
+      sentences,
+      comments,
+      users,
+    );
 
-    await initDb(sequelize, {articles, categories});
+    await initDb(sequelize, {articles, categories, users});
     process.exit(ExitCode.SUCCESS);
   }
 };
