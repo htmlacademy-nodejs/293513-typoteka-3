@@ -28,7 +28,7 @@ const createAPI = async () => {
 describe(`API creates user if data is valid`, () => {
   const validUserData = {
     name: `Сидор`,
-    lastName: `Сидоров`,
+    surname: `Сидоров`,
     email: `sidorov@example.com`,
     password: `sidorov`,
     passwordRepeated: `sidorov`,
@@ -50,7 +50,7 @@ describe(`API creates user if data is valid`, () => {
 describe(`API refuses to create user if data is invalid`, () => {
   const validUserData = {
     name: `Сидор`,
-    lastName: `Сидоров`,
+    surname: `Сидоров`,
     email: `sidorov@example.com`,
     password: `sidorov`,
     passwordRepeated: `sidorov`,

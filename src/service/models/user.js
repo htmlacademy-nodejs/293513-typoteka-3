@@ -9,7 +9,7 @@ const define = (sequelize) => User.init({
     type: DataTypes.STRING,
     allowNull: false,
   },
-  lastName: {
+  surname: {
     type: DataTypes.STRING,
     allowNull: false,
   },

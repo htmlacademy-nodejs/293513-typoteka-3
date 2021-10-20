@@ -7,7 +7,7 @@ const namePattern = /[^0-9$&+,:;=?@#|'<>.^*()%!]+/;
 
 const ErrorRegisterMessage = {
   NAME: `Имя содержит некорректные символы`,
-  LAST_NAME: `Фамилия содержит некорректные символы`,
+  SURNAME: `Фамилия содержит некорректные символы`,
   EMAIL: `Некорректный электронный адрес`,
   EMAIL_EXIST: `Электронный адрес уже используется`,
   PASSWORD: `Пароль содержит меньше 6-ти символов`,
@@ -18,8 +18,8 @@ const schema = Joi.object({
   name: Joi.string().pattern(namePattern).required().messages({
     'string.pattern.base': ErrorRegisterMessage.NAME,
   }),
-  lastName: Joi.string().pattern(namePattern).required().messages({
-    'string.pattern.base': ErrorRegisterMessage.LAST_NAME,
+  surname: Joi.string().pattern(namePattern).required().messages({
+    'string.pattern.base': ErrorRegisterMessage.SURNAME,
   }),
   email: Joi.string().email().required().messages({
     'string.email': ErrorRegisterMessage.EMAIL,
@@ -30,7 +30,7 @@ const schema = Joi.object({
   passwordRepeated: Joi.string().required().valid(Joi.ref(`password`)).messages({
     'any.only': ErrorRegisterMessage.PASSWORD_REPEATED,
   }),
-  avatar: Joi.string().optional().allow(``),
+  avatar: Joi.string(),
 });
 
 module.exports = (service) => async (req, res, next) => {

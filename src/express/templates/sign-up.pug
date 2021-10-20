@@ -9,32 +9,82 @@ block content
           | Закрыть
           | окно
         h2.popup__title Регистрация
+
         .popup__form.popup__form--active.form.form--register
-          form(action='#' method='get')
+          form(
+            action='/register'
+            method='post'
+            enctype='multipart/form-data'
+            autocomplete="off"
+          )
             .form__field
               label
-                input(type='email' name='email' placeholder='Электронная почта' required='')
+                input(
+                  type='email'
+                  name='email'
+                  placeholder='Электронная почта'
+                  required=''
+                  value=(meta ? meta.user.email : '')
+                )
+
             .form__field
               label
-                input(type='text' name='name' placeholder='Имя' required='')
+                input(
+                  type='text'
+                  name='name'
+                  placeholder='Имя'
+                  required=''
+                  value=(meta ? meta.user.name : '')
+                )
+
             .form__field
               label
-                input(type='text' name='surname' placeholder='Фамилия')
+                input(
+                  type='text'
+                  name='surname'
+                  placeholder='Фамилия'
+                  required=''
+                  value=(meta ? meta.user.surname : '')
+                )
+
             .form__field
               label
-                input(type='password' name='password' placeholder='Пароль' required='')
+                input(
+                  type='password'
+                  name='password'
+                  placeholder='Пароль'
+                  required=''
+                )
+
             .form__field
               label
-                input(type='password' name='repeat-password' placeholder='Повтор пароля' required='')
-            .form__validation-error
-              p.form__error-message При регистрации произошли ошибки:
-              ul.form__errors
-                li.form__error Пароль не может состоять из двух букв
-                li.form__error Фамилия не должна быть смешной
+                input(
+                  type='password'
+                  name='repeat-password'
+                  placeholder='Повтор пароля'
+                  required=''
+                )
+
+            if meta
+              .form__validation-error
+                p.form__error-message При регистрации произошли ошибки:
+                ul.form__errors
+                  each message in meta.errors
+                    li.form__error= message
+
             .form__image-loader
               a.form__avatar.avatar
-                img(src='img/icons/smile.svg' alt='аватар пользователя')
+                -
+                  let src = 'img/icons/smile.svg'
+                  if (meta && meta.user.avatar) {
+                    src = `img/${meta.user.avatar}`
+                  }
+                img(
+                  src= src
+                  alt='аватар пользователя'
+                )
               label
                 input.visually-hidden(type='file' name='upload')
                 | Загрузить фото профиля
-            button.form__submit-btn.form__submit-btn--register.button.button--colored(type='submit') Зарегистрироваться
+            button.form__submit-btn.form__submit-btn--register.button.button--colored(type='submit')
+              | Зарегистрироваться

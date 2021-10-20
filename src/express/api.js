@@ -75,6 +75,13 @@ class API {
   search(query) {
     return this._load(`/search`, {params: {query}});
   }
+
+  async createUser(data) {
+    return this._load(`/user`, {
+      method: HttpMethod.POST,
+      data
+    });
+  }
 }
 
 const defaultAPI = new API(defaultURL, TIMEOUT);
