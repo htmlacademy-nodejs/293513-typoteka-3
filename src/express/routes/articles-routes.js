@@ -117,17 +117,21 @@ articlesRouter.get(`/:id`, async (req, res) => {
 
 articlesRouter.post(`/:id/comments`, async (req, res) => {
   const {id} = req.params;
-  const {comment} = req.body;
+  const {message} = req.body;
+
+  const newComment = {
+    text: message,
+  };
 
   try {
-    await api.createComment(id, comment);
+    await api.createComment(id, newComment);
     res.redirect(`/articles/${id}`);
   } catch (err) {
     const validationMessages = prepareErrors(err);
     const article = await api.getArticleById(id, true);
 
     const meta = {
-      comment,
+      newComment,
       error: validationMessages,
     };
 
