@@ -1,18 +1,28 @@
 'use strict';
 
 const {Model, DataTypes} = require(`sequelize`);
+const Alias = require(`./alias`);
 
-class Comment extends Model {}
+const define = (sequelize) => {
+  class Comment extends Model {
+    static associate(models) {
+      Comment.belongsTo(models.Article, {foreignKey: `articleId`});
+      Comment.belongsTo(models.User, {as: Alias.USERS, foreignKey: `userId`});
+    }
+  }
 
-const define = (sequelize) => Comment.init({
-  text: {
-    type: DataTypes.TEXT,
-    allowNull: false,
-  },
-}, {
-  sequelize,
-  modelName: `Comment`,
-  tableName: `comments`,
-});
+  Comment.init({
+    text: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+    },
+  }, {
+    sequelize,
+    modelName: `Comment`,
+    tableName: `comments`,
+  });
+
+  return Comment;
+};
 
 module.exports = define;
