@@ -1,12 +1,14 @@
 'use strict';
 
 const {Router} = require(`express`);
+const csrf = require(`csurf`);
 const api = require(`../api`).getAPI();
 const asyncMiddleware = require(`../middlewares/async-middleware`);
 const {prepareErrors} = require(`../../utils`);
 const upload = require(`../middlewares/upload`);
 const auth = require(`../middlewares/auth`);
 
+const csrfProtection = csrf();
 const articlesRouter = new Router();
 
 articlesRouter.get(`/category/:id`, (req, res) => {
@@ -14,13 +16,13 @@ articlesRouter.get(`/category/:id`, (req, res) => {
   res.render(`articles-by-category`, {user});
 });
 
-articlesRouter.get(`/add`, auth, asyncMiddleware(async (req, res) => {
+articlesRouter.get(`/add`, [auth, csrfProtection], asyncMiddleware(async (req, res) => {
   const {user} = req.session;
   const categories = await api.getCategories();
-  res.render(`new-post`, {categories, user});
+  res.render(`new-post`, {categories, user, csrfToken: req.csrfToken()});
 }));
 
-articlesRouter.post(`/add`, upload.single(`upload`), async (req, res) => {
+articlesRouter.post(`/add`, [upload.single(`upload`), csrfProtection], async (req, res) => {
   const {user} = req.session;
   const {body, file} = req;
 
@@ -51,12 +53,12 @@ articlesRouter.post(`/add`, upload.single(`upload`), async (req, res) => {
 
     req.session.meta = meta;
     req.session.save(() => {
-      res.render(`new-post`, {categories, meta});
+      res.render(`new-post`, {categories, meta, csrfToken: req.csrfToken()});
     });
   }
 });
 
-articlesRouter.get(`/edit/:id`, auth, asyncMiddleware(async (req, res) => {
+articlesRouter.get(`/edit/:id`, [auth, csrfProtection], asyncMiddleware(async (req, res) => {
   const {user} = req.session;
   const {id} = req.params;
 
@@ -65,10 +67,10 @@ articlesRouter.get(`/edit/:id`, auth, asyncMiddleware(async (req, res) => {
     api.getCategories(),
   ]);
 
-  res.render(`edit-post`, {id, article, categories, user});
+  res.render(`edit-post`, {id, article, categories, user, csrfToken: req.csrfToken()});
 }));
 
-articlesRouter.post(`/edit/:id`, upload.single(`upload`), async (req, res) => {
+articlesRouter.post(`/edit/:id`, [upload.single(`upload`), csrfProtection], async (req, res) => {
   const {user} = req.session;
   const {body, file} = req;
   const {id} = req.params;
@@ -101,19 +103,19 @@ articlesRouter.post(`/edit/:id`, upload.single(`upload`), async (req, res) => {
 
     req.session.meta = meta;
     req.session.save(() => {
-      res.render(`edit-post`, {id, categories, meta});
+      res.render(`edit-post`, {id, categories, meta, csrfToken: req.csrfToken()});
     });
   }
 });
 
-articlesRouter.get(`/:id`, async (req, res) => {
+articlesRouter.get(`/:id`, csrfProtection, async (req, res) => {
   const {user} = req.session;
   const {id} = req.params;
   const article = await api.getArticleById(id, true);
-  res.render(`post`, {id, article, user});
+  res.render(`post`, {id, article, user, csrfToken: req.csrfToken()});
 });
 
-articlesRouter.post(`/:id/comments`, async (req, res) => {
+articlesRouter.post(`/:id/comments`, csrfProtection, async (req, res) => {
   const {user} = req.session;
   const {id} = req.params;
   const {message} = req.body;
@@ -137,7 +139,7 @@ articlesRouter.post(`/:id/comments`, async (req, res) => {
 
     req.session.meta = meta;
     req.session.save(() => {
-      res.render(`post`, {id, article, meta});
+      res.render(`post`, {id, article, meta, csrfToken: req.csrfToken()});
     });
   }
 });
