@@ -10,6 +10,7 @@ const {prepareErrors} = require(`../../utils`);
 const mainRouter = new Router();
 
 mainRouter.get(`/`, asyncMiddleware(async (req, res) => {
+  const {user} = req.session;
   const {page = 1} = req.query;
   const limit = ARTICLE_PER_PAGE;
   const offset = (Number(page) - 1) * ARTICLE_PER_PAGE;
@@ -28,10 +29,14 @@ mainRouter.get(`/`, asyncMiddleware(async (req, res) => {
     totalPages,
     categories,
     comments,
+    user,
   });
 }));
 
-mainRouter.get(`/register`, (req, res) => res.render(`sign-up`));
+mainRouter.get(`/register`, (req, res) => {
+  const {user} = req.session;
+  res.render(`sign-up`, {user});
+});
 
 mainRouter.post(`/register`, upload.single(`upload`), async (req, res) => {
   const {body, file} = req;
@@ -68,18 +73,58 @@ mainRouter.post(`/register`, upload.single(`upload`), async (req, res) => {
   }
 });
 
-mainRouter.get(`/login`, (req, res) => res.render(`login`));
+mainRouter.get(`/login`, (req, res) => {
+  const {user} = req.session;
+  res.render(`login`, {user});
+});
+
+mainRouter.post(`/login`, async (req, res) => {
+  const {email, password} = req.body;
+
+  try {
+    const user = await api.auth(email, password);
+
+    req.session.user = user;
+    req.session.user.isAdmin = user.id === 1;
+
+    req.session.save(() => {
+      res.redirect(`/`);
+    });
+  } catch (errors) {
+    const validationMessages = prepareErrors(errors);
+    const meta = {
+      email,
+      errors: validationMessages,
+    };
+
+    req.session.meta = meta;
+
+    req.session.save(() => {
+      res.render(`login`, {meta})
+    });
+  }
+});
+
+mainRouter.get(`/logout`, (req, res) => {
+  delete req.session.user;
+  res.redirect(`/`);
+});
 
 mainRouter.get(`/search`, async (req, res) => {
+  const {user} = req.session;
+
   try {
     const {search} = req.query;
     const results = await api.search(search.toLowerCase());
     res.render(`search`, {results, search: search.toLowerCase()});
   } catch (err) {
-    res.render(`search`, {results: [], search: req.query.search});
+    res.render(`search`, {results: [], search: req.query.search, user});
   }
 });
 
-mainRouter.get(`/categories`, (req, res) => res.render(`all-categories`));
+mainRouter.get(`/categories`, (req, res) => {
+  const {user} = req.session;
+  res.render(`all-categories`, {user});
+});
 
 module.exports = mainRouter;

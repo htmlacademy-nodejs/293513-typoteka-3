@@ -8,14 +8,19 @@ const upload = require(`../middlewares/upload`);
 
 const articlesRouter = new Router();
 
-articlesRouter.get(`/category/:id`, (req, res) => res.render(`articles-by-category`));
+articlesRouter.get(`/category/:id`, (req, res) => {
+  const {user} = req.session;
+  res.render(`articles-by-category`, {user});
+});
 
 articlesRouter.get(`/add`, asyncMiddleware(async (req, res) => {
+  const {user} = req.session;
   const categories = await api.getCategories();
-  res.render(`new-post`, {categories});
+  res.render(`new-post`, {categories, user});
 }));
 
 articlesRouter.post(`/add`, upload.single(`upload`), async (req, res) => {
+  const {user} = req.session;
   const {body, file} = req;
 
   const articleData = {
@@ -24,6 +29,7 @@ articlesRouter.post(`/add`, upload.single(`upload`), async (req, res) => {
     categories: body.category || [],
     announce: body.announcement,
     fullText: body[`full-text`],
+    userId: user.id,
   };
 
   if (file) {
@@ -50,15 +56,19 @@ articlesRouter.post(`/add`, upload.single(`upload`), async (req, res) => {
 });
 
 articlesRouter.get(`/edit/:id`, asyncMiddleware(async (req, res) => {
+  const {user} = req.session;
   const {id} = req.params;
+
   const [article, categories] = await Promise.all([
     api.getArticleById(id),
     api.getCategories(),
   ]);
-  res.render(`edit-post`, {id, article, categories});
+
+  res.render(`edit-post`, {id, article, categories, user});
 }));
 
 articlesRouter.post(`/edit/:id`, upload.single(`upload`), async (req, res) => {
+  const {user} = req.session;
   const {body, file} = req;
   const {id} = req.params;
 
@@ -69,6 +79,7 @@ articlesRouter.post(`/edit/:id`, upload.single(`upload`), async (req, res) => {
     announce: body.announcement,
     fullText: body[`full-text`],
     picture: '',
+    userId: user.id,
   };
 
   if (file) {
@@ -95,17 +106,20 @@ articlesRouter.post(`/edit/:id`, upload.single(`upload`), async (req, res) => {
 });
 
 articlesRouter.get(`/:id`, async (req, res) => {
+  const {user} = req.session;
   const {id} = req.params;
   const article = await api.getArticleById(id, true);
-  res.render(`post`, {id, article});
+  res.render(`post`, {id, article, user});
 });
 
 articlesRouter.post(`/:id/comments`, async (req, res) => {
+  const {user} = req.session;
   const {id} = req.params;
   const {message} = req.body;
 
   const newComment = {
     text: message,
+    userId: user.id,
   };
 
   try {

@@ -76,10 +76,17 @@ class API {
     return this._load(`/search`, {params: {query}});
   }
 
-  async createUser(data) {
+  createUser(data) {
     return this._load(`/user`, {
       method: HttpMethod.POST,
       data
+    });
+  }
+
+  auth(email, password) {
+    return this._load(`/user/auth`, {
+      method: HttpMethod.POST,
+      data: {email, password}
     });
   }
 }
