@@ -5,6 +5,7 @@ const api = require(`../api`).getAPI();
 const asyncMiddleware = require(`../middlewares/async-middleware`);
 const {ARTICLE_PER_PAGE} = require(`../../constants`);
 const upload = require(`../middlewares/upload`);
+const auth = require(`../middlewares/auth`);
 const {prepareErrors} = require(`../../utils`);
 
 const mainRouter = new Router();
@@ -122,7 +123,7 @@ mainRouter.get(`/search`, async (req, res) => {
   }
 });
 
-mainRouter.get(`/categories`, (req, res) => {
+mainRouter.get(`/categories`, auth, (req, res) => {
   const {user} = req.session;
   res.render(`all-categories`, {user});
 });

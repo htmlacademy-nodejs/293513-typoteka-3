@@ -5,6 +5,7 @@ const api = require(`../api`).getAPI();
 const asyncMiddleware = require(`../middlewares/async-middleware`);
 const {prepareErrors} = require(`../../utils`);
 const upload = require(`../middlewares/upload`);
+const auth = require(`../middlewares/auth`);
 
 const articlesRouter = new Router();
 
@@ -13,7 +14,7 @@ articlesRouter.get(`/category/:id`, (req, res) => {
   res.render(`articles-by-category`, {user});
 });
 
-articlesRouter.get(`/add`, asyncMiddleware(async (req, res) => {
+articlesRouter.get(`/add`, auth, asyncMiddleware(async (req, res) => {
   const {user} = req.session;
   const categories = await api.getCategories();
   res.render(`new-post`, {categories, user});
@@ -55,7 +56,7 @@ articlesRouter.post(`/add`, upload.single(`upload`), async (req, res) => {
   }
 });
 
-articlesRouter.get(`/edit/:id`, asyncMiddleware(async (req, res) => {
+articlesRouter.get(`/edit/:id`, auth, asyncMiddleware(async (req, res) => {
   const {user} = req.session;
   const {id} = req.params;
 
