@@ -179,4 +179,16 @@ articlesRouter.post(`/:id/comments`, csrfProtection, async (req, res) => {
   }
 });
 
+articlesRouter.post(`/delete/:id`, auth, async (req, res) => {
+  const {id} = req.params;
+
+  try {
+    await api.deleteArticle(id);
+
+    res.redirect(`/my`);
+  } catch (err) {
+    res.redirect(`/500`);
+  }
+});
+
 module.exports = articlesRouter;

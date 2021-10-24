@@ -59,6 +59,12 @@ class API {
     });
   }
 
+  deleteArticle(id) {
+    return this._load(`/articles/${id}`, {
+      method: HttpMethod.DELETE,
+    });
+  }
+
   getCategories(count) {
     return this._load(`/categories`, {
       params: {count},

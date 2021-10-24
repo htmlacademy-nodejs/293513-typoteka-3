@@ -30,7 +30,7 @@ block content
 
             if article.picture
               .post__picture
-                img(src=`${article.picture}` alt='')
+                img(src=`img/${article.picture}` alt='')
 
           .post__text
             if article.fullText
@@ -68,7 +68,7 @@ block content
                 autocomplete="off"
               )
                 input(type="hidden" name="_csrf" value= csrfToken)
-                .comments__avatar.avatar
+                .comments__avatar.avatar(style={overflow: 'hidden'})
                   if user.avatar
                     img(src=`img/${user.avatar}` alt= user.name)
                 label

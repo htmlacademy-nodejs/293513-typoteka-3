@@ -4,6 +4,7 @@ include mixins/error-message
 block content
   main
     section
+      pre= JSON.stringify(meta, null, 2)
       .popup.popup--new-publication.popup--anti
         .new-publication
           form(
@@ -48,16 +49,11 @@ block content
                     )
 
                 .form__field.form__field--post-image
-                  -
-                    let fileName = meta && meta.article
-                      ? meta.article.picture
-                      : ''
                   label
                     input#image-name-field(
                       type='text'
                       name='photo'
                       placeholder='Фотография'
-                      value= fileName
                       readonly=''
                     )
                   .form__image-loader.form__image-loader--publication
