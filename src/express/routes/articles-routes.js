@@ -11,10 +11,17 @@ const auth = require(`../middlewares/auth`);
 const csrfProtection = csrf();
 const articlesRouter = new Router();
 
-articlesRouter.get(`/category/:id`, (req, res) => {
+articlesRouter.get(`/category/:id`, asyncMiddleware(async (req, res) => {
   const {user} = req.session;
-  res.render(`articles-by-category`, {user});
-});
+  const {id} = req.params;
+
+  const [categories, category] = await Promise.all([
+    api.getCategories(),
+    api.getCategoryById(id, true),
+  ]);
+
+  res.render(`articles-by-category`, {categories, category, user});
+}));
 
 articlesRouter.get(`/add`, [auth, csrfProtection], asyncMiddleware(async (req, res) => {
   const {user} = req.session;

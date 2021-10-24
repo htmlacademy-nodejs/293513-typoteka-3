@@ -1,5 +1,6 @@
 'use strict';
 
+const Sequelize = require(`sequelize`);
 const Alias = require(`../models/alias`);
 
 class ArticleService {
@@ -43,6 +44,34 @@ class ArticleService {
         [`createdAt`, `DESC`],
       ],
     });
+
+    return articles.map((article) => article.get());
+  }
+
+  async findPopular(count) {
+    const options = {
+      limit: count,
+      subQuery: false,
+      attributes: {
+        include: [
+          [
+            Sequelize.fn(`COUNT`, Sequelize.col(`comments.id`)),
+            `commentsCount`,
+          ],
+        ],
+      },
+      include: [
+        {
+          model: this._Comment,
+          as: Alias.COMMENTS,
+          attributes: [],
+        },
+      ],
+      group: [`Article.id`],
+      order: [[Sequelize.col(`commentsCount`), `DESC`]],
+    };
+
+    const articles = await this._Article.findAll(options);
 
     return articles.map((article) => article.get());
   }

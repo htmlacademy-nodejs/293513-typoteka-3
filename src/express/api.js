@@ -33,6 +33,12 @@ class API {
     });
   }
 
+  getPopularArticles(count) {
+    return this._load(`/articles/popular`, {
+      params: {count},
+    });
+  }
+
   getArticleById(id, comments) {
     return this._load(`/articles/${id}`, {
       params: {comments},
@@ -56,6 +62,12 @@ class API {
   getCategories(count) {
     return this._load(`/categories`, {
       params: {count},
+    });
+  }
+
+  getCategoryById(id, articles) {
+    return this._load(`/categories/${id}`, {
+      params: {articles}
     });
   }
 

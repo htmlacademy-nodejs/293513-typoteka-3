@@ -26,6 +26,12 @@ module.exports = (app, articleService, commentService) => {
     res.status(HttpCode.OK).json(result);
   });
 
+  route.get(`/popular`, async (req, res) => {
+    const {count} = req.query;
+    const articles = await articleService.findPopular(count);
+    res.status(HttpCode.OK).json(articles);
+  });
+
   route.get(`/comments`, async (req, res) => {
     const {count} = req.query;
 
