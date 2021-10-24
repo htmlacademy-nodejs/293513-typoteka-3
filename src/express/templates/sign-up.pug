@@ -84,7 +84,11 @@ block content
                   alt='аватар пользователя'
                 )
               label
-                input.visually-hidden(type='file' name='upload')
+                input.visually-hidden(
+                  type='file'
+                  name='upload'
+                  value=(meta && meta.user.avatar)
+                )
                 | Загрузить фото профиля
             button.form__submit-btn.form__submit-btn--register.button.button--colored(type='submit')
               | Зарегистрироваться

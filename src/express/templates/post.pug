@@ -17,12 +17,16 @@ block content
             h2.post__title.title.title--main= article.title
 
             ul.post__themes.themes
-              each category in article.categories
-                li.themes__item
-                  a.themes__item-link(href='#')
-                    | #{category.name}
-                    sup 88
-                  button.themes__remove-btn(type='button') Удалить категорию
+              each articleCategory in article.categories
+                each category in categories
+                  if category.name === articleCategory.name
+                    li.themes__item
+                      a.themes__item-link(
+                        href=`/articles/category/${category.id}`
+                      )
+                        | #{articleCategory.name}
+                        sup= category.count
+                      button.themes__remove-btn(type='button') Удалить категорию
 
             if article.picture
               .post__picture
@@ -36,35 +40,52 @@ block content
 
       .post__wrapper.post__wrapper--comments
         section.post__comments.comments
-          h2.comments__title.title.title--middle Комментарии
+          if !article.comments.length
+            h2.comments__title.title.title--middle Комментарии отсутствуют
+          else
+            h2.comments__title.title.title--middle Комментарии
 
-          ul.comments__list
-            each comment in article.comments
-              li.comments__comment
+            ul.comments__list
+              each comment in article.comments
+                li.comments__comment
+                  .comments__avatar.avatar
+                    if comment.users.avatar
+                      img(
+                        src=`img/${comment.users.avatar}`
+                        alt= comment.users.name
+                      )
+                  .comments__text
+                    .comments__head
+                      p #{`${comment.users.name} ${comment.users.surname}`} •
+                      +dateTime(comment.updatedAt)(class=".comments__date")
+                    p.comments__message= comment.text
+
+          if user
+            .comments__footer.comments__footer--user
+              form(
+                action=`/articles/${id}/comments`
+                method='post'
+                autocomplete="off"
+              )
+                input(type="hidden" name="_csrf" value= csrfToken)
                 .comments__avatar.avatar
-                  img(src='/img/avatar-1.png' alt='аватар пользователя')
-                .comments__text
-                  .comments__head
-                    p Евгений Петров •
-                    +dateTime(comment.updatedAt)(class=".comments__date")
-                  p.comments__message= comment.text
+                  if user.avatar
+                    img(src=`img/${user.avatar}` alt= user.name)
+                label
+                  textarea(
+                    rows='1'
+                    name='message'
+                    placeholder='Присоединиться к обсуждению'
+                  )= `${meta ? meta.newComment.text : ''}`
+                button.comments__button.button.button--colored(type='submit') Опубликовать
 
-          .comments__footer.comments__footer--user
-            form(
-              action=`/articles/${id}/comments`
-              method='post'
-              autocomplete="off"
-            )
-              input(type="hidden" name="_csrf" value= csrfToken)
-              .comments__avatar.avatar
-                img(src='/img/avatar-2.png' alt='аватар пользователя')
-              label
-                textarea(
-                  rows='1'
-                  name='message'
-                  placeholder='Присоединиться к обсуждению'
-                )= `${meta ? meta.newComment.text : ''}`
-              button.comments__button.button.button--colored(type='submit') Опубликовать
-
-            if meta
-              +errorMessages(meta.error)
+              if meta
+                +errorMessages(meta.error)
+          else
+            .comments__footer.comments__footer--visitor
+              a.comments__button.button.button--colored(href='/login') Войти
+              .comments__registration
+                p.text.text--signature
+                  a(href='/register')
+                    b.title.title--small Регистрация
+                  | Чтобы присоединиться к переписке нужно зарегистрироваться
