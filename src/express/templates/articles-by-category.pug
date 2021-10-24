@@ -1,69 +1,16 @@
 extends layout
+include mixins/categories
 include mixins/date-time
+include mixins/pagination
 
 block content
   main.articles-category
-    h1 Бизнес
-    //pre= JSON.stringify(category, null, 2)
-    section.articles-category__theme-list
-      h2.visually-hidden Список тем
-      ul.themes
-        li.themes__item
-          a.themes__item-link(href='#')
-            | Автомобили
-            sup 88
-        li.themes__item
-          a.themes__item-link(href='#')
-            | Удаленная работа
-            sup 13
-        li.themes__item
-          a.themes__item-link.themes__item-link--active
-            | Бизнес
-            sup 13
-        li.themes__item
-          a.themes__item-link(href='#')
-            | Путешествия
-            sup 13
-        li.themes__item
-          a.themes__item-link.themes__item-link--padding(href='#')
-            | Дизайн и обустройство
-            sup 13
-        li.themes__item
-          a.themes__item-link(href='#')
-            | Производство игрушек
-            sup 22
-        li.themes__item
-          a.themes__item-link(href='#')
-            | UX & UI
-            sup 22
+    h1= category.name
+    +categories('articles-category__theme-list', id)
 
     section.articles-category__list.preview
       h2.visually-hidden Список превью статей
 
-      ul.preview__list
-        each article in category.articles
-          li.preview__item
-            ul.preview__breadcrumbs
-              each articleCategory in article.categories
-                li.preview__breadcrumbs-item
-                  a.preview__breadcrumbs-link(href='#')= articleCategory.name
+      include partials/articles-list
 
-            if article.picture
-              .preview__background
-                img.preview__background-image(
-                  src=`/img/${article.picture}`
-                  width='460'
-                  height='240'
-                  alt= article.title
-                  style={['max-height']: '100%'}
-                )
-
-            +dateTime(article.createdAt)(class='preview__time')
-
-            h3.preview__name
-              a.preview__name-link(href=`/articles/${article.id}`)= article.title
-            p.preview__text= article.announce
-            a.preview__comment(href=`/articles/${article.id}/comments`)
-              | Комментарии
-              span.preview__cloud
-              b.preview__comment-count= article.comments.length
+    +pagination(page, totalPages, 2, `/articles/category/${id}?`)

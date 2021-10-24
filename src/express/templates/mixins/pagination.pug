@@ -20,7 +20,7 @@ mixin pagination(page, totalPages, width, prefix)
     var i = start - 1
 
   .preview__toggle-wrapper
-    ul.preview__pagination.pagination
+    ul.preview__pagination.pagination(style={['justify-content']: 'center'})
       li
         a.pagination__button.button.button--backwards(
           class={['button--disabled']: page === 1}

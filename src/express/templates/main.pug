@@ -1,5 +1,5 @@
 extends layout
-include mixins/articles-list
+include mixins/categories
 include mixins/date-time
 include mixins/shrot-text
 include mixins/pagination
@@ -13,7 +13,7 @@ block content
       .main-page__empty-wrapper
         p.main-page__empty-text Здесь пока пусто!
     else
-      include partials/categories
+      +categories('main-page__theme-list')
 
       .main-page__section-flex
         section.main-page__hot.hot
@@ -56,6 +56,6 @@ block content
       section.main-page__list.preview
         h2.visually-hidden Список превью статей
 
-        +articlesList(articles)
+        include partials/articles-list
 
       +pagination(page, totalPages, 2, `?`)

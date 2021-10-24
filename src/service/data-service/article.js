@@ -7,6 +7,7 @@ class ArticleService {
   constructor(sequelize) {
     this._Article = sequelize.models.Article;
     this._Comment = sequelize.models.Comment;
+    this._Category = sequelize.models.Category;
     this._User = sequelize.models.User;
   }
 
@@ -107,9 +108,20 @@ class ArticleService {
     return await this._Article.findByPk(id, {include});
   }
 
-  async findPage({limit, offset, comments}) {
+  async findPage({limit, offset, comments, categoryId}) {
+    const category = {
+      model: this._Category,
+      as: Alias.CATEGORIES,
+    };
+
+    if (categoryId) {
+      category.where = {
+        id: categoryId,
+      };
+    }
+
     const include = [
-      Alias.CATEGORIES,
+      category,
       {
         model: this._User,
         as: Alias.USERS,

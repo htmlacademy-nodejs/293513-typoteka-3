@@ -18,9 +18,8 @@ module.exports = (app, service) => {
 
   route.get(`/:id`, async (req, res) => {
     const {id} = req.params;
-    const {articles} = req.query;
 
-    const category = await service.findOne(id, articles);
+    const category = await service.findOne(id);
 
     return res.status(HttpCode.OK).json(category);
   });
