@@ -42,7 +42,7 @@ class CategoryService {
   }
 
   async create(data) {
-    return this._Category.create(data);
+    return await this._Category.create(data);
   }
 
   async update(id, category) {
