@@ -13,23 +13,29 @@ module.exports = (app, articleService, commentService) => {
   app.use(`/articles`, route);
 
   route.get(`/`, async (req, res) => {
-    const {offset, limit, comments} = req.query;
+    const {offset, limit, comments, categoryId} = req.query;
 
     let result;
 
     if (limit || offset) {
-      result = await articleService.findPage({limit, offset, comments});
+      result = await articleService.findPage({limit, offset, comments, categoryId});
     } else {
-      result = await articleService.findAll(comments);
+      result = await articleService.findAll(comments, categoryId);
     }
 
     res.status(HttpCode.OK).json(result);
   });
 
-  route.get(`/comments`, async (req, res) => {
+  route.get(`/popular`, async (req, res) => {
     const {count} = req.query;
+    const articles = await articleService.findPopular(count);
+    res.status(HttpCode.OK).json(articles);
+  });
 
-    const comments = await commentService.findAll(count);
+  route.get(`/comments`, async (req, res) => {
+    const {count, needArticle} = req.query;
+
+    const comments = await commentService.findAll(count, needArticle);
 
     res.status(HttpCode.OK).json(comments);
   });

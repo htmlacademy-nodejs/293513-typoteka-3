@@ -7,12 +7,14 @@ const getMockUsers = async () => [
     name: `Иван`,
     surname: `Иванов`,
     email: `ivanov@example.com`,
+    avatar: `eeiseMYIc8.jpg`,
     passwordHash: await passwordUtils.hash(`ivanov`),
   },
   {
     name: `Пётр`,
     surname: `Петров`,
     email: `petrov@example.com`,
+    avatar: `eeiseMYIc8.jpg`,
     passwordHash: await passwordUtils.hash(`petrov`),
   }
 ]

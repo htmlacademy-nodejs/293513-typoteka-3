@@ -5,7 +5,14 @@ include mixins/search-text
 block content
   main
     section.search-page
-      .search-page__wrapper(class=`${(!results.length && search) ? 'search-page__wrapper--empty' : ''}`)
+      .search-page__wrapper(
+        class=`${(!results.length && search) ? 'search-page__wrapper--empty' : ''}`
+        style={
+          height: 'auto',
+          ['min-height']: '610px',
+          ['padding-bottom']: '1px'
+        }
+      )
         h1 Поиск
         .search.search-page__form
           form(action='/search' method='get')
@@ -16,7 +23,7 @@ block content
           if results.length
             each article in results
               .search__result
-                +dateTime(article.createdDate)(class='.search__date')
+                +dateTime(article.updatedAt)(class='.search__date')
                 +searchText(article, search)
         if (!results.length && search)
           p.search-page__empty Ничего не нашлось

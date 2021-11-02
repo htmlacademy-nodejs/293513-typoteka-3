@@ -12,6 +12,7 @@ block content
             enctype='multipart/form-data'
             autocomplete='off'
           )
+            input(type="hidden" name="_csrf" value= csrfToken)
             .new-publication__header
               h1 Новая публикация
               .new-publication__date-form

@@ -9,6 +9,7 @@ const sequelize = require(`../service/lib/sequelize`);
 const mainRoutes = require(`./routes/main-routes`);
 const myRoutes = require(`./routes/my-routes`);
 const articlesRoutes = require(`./routes/articles-routes`);
+const categoriesRoutes = require(`./routes/categories-routes`);
 const {HttpCode} = require(`../constants`);
 const {getLogger} = require(`../service/lib/logger`);
 
@@ -20,6 +21,7 @@ if (!SESSION_SECRET) {
 
 const DEFAULT_PORT = 8080;
 const PUBLIC_DIR = `public`;
+const UPLOAD_DIR = `upload`;
 const EXPIRATION_TIME = 180000;
 const CHECK_EXPIRATION_INTERVAL = 60000;
 
@@ -48,10 +50,12 @@ app.set(`views`, path.resolve(__dirname, `templates`));
 app.set(`view engine`, `pug`);
 
 app.use(express.static(path.resolve(__dirname, PUBLIC_DIR)));
+app.use(express.static(path.resolve(__dirname, UPLOAD_DIR)));
 
 app.use(`/`, mainRoutes);
 app.use(`/my`, myRoutes);
 app.use(`/articles`, articlesRoutes);
+app.use(`/categories`, categoriesRoutes);
 
 app.use((req, res) => res.status(HttpCode.BAD_REQUEST).render(`errors/400`));
 app.use((err, req, res, _next) => {

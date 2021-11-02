@@ -27,9 +27,15 @@ class API {
     }
   }
 
-  getArticles({offset, limit, comments} = {}) {
+  getArticles({offset, limit, comments, categoryId} = {}) {
     return this._load(`/articles`, {
-      params: {offset, limit, comments},
+      params: {offset, limit, comments, categoryId},
+    });
+  }
+
+  getPopularArticles(count) {
+    return this._load(`/articles/popular`, {
+      params: {count},
     });
   }
 
@@ -53,15 +59,53 @@ class API {
     });
   }
 
+  deleteArticle(id) {
+    return this._load(`/articles/${id}`, {
+      method: HttpMethod.DELETE,
+    });
+  }
+
   getCategories(count) {
     return this._load(`/categories`, {
       params: {count},
     });
   }
 
-  getComments(count) {
+  getCategoryById(id, articles) {
+    return this._load(`/categories/${id}`, {
+      params: {articles}
+    });
+  }
+
+  createCategory(data) {
+    return this._load(`/categories`, {
+      method: HttpMethod.POST,
+      data
+    });
+  }
+
+  editCategory(id, data) {
+    return this._load(`/categories/${id}`, {
+      method: HttpMethod.PUT,
+      data
+    });
+  }
+
+  deleteCategory(id) {
+    return this._load(`/categories/${id}`, {
+      method: HttpMethod.DELETE,
+    });
+  }
+
+  getComments(count, needArticle) {
     return this._load(`/articles/comments`, {
-      params: {count}
+      params: {count, needArticle}
+    });
+  }
+
+  deleteComment(articleId, commentId) {
+    return this._load(`/articles/${articleId}/comments/${commentId}`, {
+      method: HttpMethod.DELETE,
     });
   }
 
@@ -76,10 +120,17 @@ class API {
     return this._load(`/search`, {params: {query}});
   }
 
-  async createUser(data) {
+  createUser(data) {
     return this._load(`/user`, {
       method: HttpMethod.POST,
       data
+    });
+  }
+
+  auth(email, password) {
+    return this._load(`/user/auth`, {
+      method: HttpMethod.POST,
+      data: {email, password}
     });
   }
 }

@@ -1,4 +1,5 @@
 extends layout
+include mixins/categories
 include mixins/date-time
 include mixins/shrot-text
 include mixins/pagination
@@ -12,67 +13,54 @@ block content
       .main-page__empty-wrapper
         p.main-page__empty-text Здесь пока пусто!
     else
-      include partials/categories
+      +categories('main-page__theme-list')
 
       .main-page__section-flex
         section.main-page__hot.hot
           h2.hot__name
             | Самое обсуждаемое
             span.hot__icon.hot__icon--fire
-          ul.hot__list
-            li.hot__list-item
-              a.hot__list-link(href='#')
-                | Билл Гейтс впервые за два года возглавил рейтинг самых богатых людей
-                | мира по версии Bloomberg
-                sup.hot__link-sup 12
-            li.hot__list-item
-              a.hot__list-link(href='#')
-                | Сервис для аналитики Telegram-чатов Combot попал под блокировку из-за
-                | информации на служебной
-                sup.hot__link-sup 15
-                |  странице
-            li.hot__list-item.hot__list-item--margin
-              a.hot__list-link(href='#')
-                | Модель Кайли Дженнер продаст 51% своей компании Kylie Cosmetics
-                | владельцу Factor за $600 млн
-                sup.hot__link-sup 52
-            li.hot__list-item.hot__list-item--end
-              a.hot__list-link(href='#')
-                | Tesla получила 146 тысяч предзаказов на электрический пикап Cybertruck
-                | за двое суток
-                sup.hot__link-sup 153
+
+          if !popular.length
+            p.hot__empty Здесь пока ничего нет...
+          else
+            ul.hot__list
+              each article in popular
+                li.hot__list-item
+                  a.hot__list-link(href=`/articles/${article.id}`)
+                    +shortText(article.announce)
+                    sup.hot__link-sup= article.commentsCount
 
         section.main-page__last.last
           h2.last__name
             | Последние комментарии
             span.last__icon.last__icon--cloud
-          ul.last__list
-            each comment in comments
-              li.last__list-item
-                img.last__list-image(src='img/avatar-small-1.png' width='20' height='20' alt='Аватар пользователя')
-                b.last__list-name Анна Артамонова
-                a.last__list-link(href=`/articles/${comment.articleId}`)
-                  +shortText(comment.text)
+
+          if !comments.length
+            p.last__empty Здесь пока ничего нет...
+          else
+            ul.last__list
+              each comment in comments
+                li.last__list-item
+                  if comment.users.avatar
+                    img.last__list-image(
+                      src=`img/${comment.users.avatar}`
+                      width='20'
+                      height='20'
+                      alt= comment.users.name
+                    )
+                  else
+                    span.avatar.last__list-image(
+                      style={['background-size']: 'contain'}
+                    )
+                  b.last__list-name
+                    | #{comment.users.name} #{comment.users.surname}
+                  a.last__list-link(href=`/articles/${comment.articleId}`)
+                    +shortText(comment.text)
 
       section.main-page__list.preview
         h2.visually-hidden Список превью статей
-        ul.preview__list
-          each article in articles
-            li(class=`preview__item ${!article.picture ? 'preview__item--noimage' : ''}`)
-              ul.preview__breadcrumbs
-                each category in article.categories
-                  li.preview__breadcrumbs-item
-                    a.preview__breadcrumbs-link(href='#')= category.name
-              if article.picture
-                .preview__background
-                  img.preview__background-image(src=`/img/${article.picture}` width='460' height='240' alt= article.title)
-              +dateTime(article.createdAt)(class='preview__time')
-              h3.preview__name
-                a.preview__name-link(href=`/articles/${article.id}`)= article.title
-              p.preview__text= article.announce
-              a.preview__comment(href=`/articles/${article.id}/comments`)
-                | Комментарии
-                span.preview__cloud
-                b.preview__comment-count= article.comments.length
+
+        include partials/articles-list
 
       +pagination(page, totalPages, 2, `?`)

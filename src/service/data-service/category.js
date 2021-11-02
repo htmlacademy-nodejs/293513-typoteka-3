@@ -36,6 +36,28 @@ class CategoryService {
       return await this._Category.findAll({raw: true});
     }
   }
+
+  async findOne(id) {
+    return await this._Category.findByPk(id);
+  }
+
+  async create(data) {
+    return await this._Category.create(data);
+  }
+
+  async update(id, category) {
+    return await this._Category.update(category, {
+      where: {id},
+    });
+  }
+
+  async remove(id) {
+    const deletedRows = await this._Category.destroy({
+      where: {id},
+    });
+
+    return !!deletedRows;
+  }
 }
 
 module.exports = CategoryService;
