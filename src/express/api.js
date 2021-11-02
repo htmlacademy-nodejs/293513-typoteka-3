@@ -97,9 +97,15 @@ class API {
     });
   }
 
-  getComments(count) {
+  getComments(count, needArticle) {
     return this._load(`/articles/comments`, {
-      params: {count}
+      params: {count, needArticle}
+    });
+  }
+
+  deleteComment(articleId, commentId) {
+    return this._load(`/articles/${articleId}/comments/${commentId}`, {
+      method: HttpMethod.DELETE,
     });
   }
 

@@ -15,8 +15,8 @@ myRouter.get(`/`, auth, asyncMiddleware(async (req, res) => {
 
 myRouter.get(`/comments`, auth, asyncMiddleware(async (req, res) => {
   const {user} = req.session;
-  const articles = await api.getArticles({comments: true});
-  res.render(`comments`, {articles: articles.slice(0, 3), user});
+  const comments = await api.getComments(null, true);
+  res.render(`comments`, {comments, user});
 }));
 
 module.exports = myRouter;

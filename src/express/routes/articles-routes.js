@@ -191,4 +191,16 @@ articlesRouter.post(`/delete/:id`, auth, async (req, res) => {
   }
 });
 
+articlesRouter.get(`/:id/comments/delete/:commentId`, auth, async (req, res) => {
+  const {id, commentId} = req.params;
+
+  try {
+    await api.deleteComment(id, commentId);
+
+    res.redirect(`/my/comments`);
+  } catch (err) {
+    res.redirect(`/500`);
+  }
+});
+
 module.exports = articlesRouter;

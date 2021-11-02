@@ -33,9 +33,9 @@ module.exports = (app, articleService, commentService) => {
   });
 
   route.get(`/comments`, async (req, res) => {
-    const {count} = req.query;
+    const {count, needArticle} = req.query;
 
-    const comments = await commentService.findAll(count);
+    const comments = await commentService.findAll(count, needArticle);
 
     res.status(HttpCode.OK).json(comments);
   });

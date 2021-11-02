@@ -6,22 +6,31 @@ class CommentService {
   constructor(sequelize) {
     this._Comment = sequelize.models.Comment;
     this._User = sequelize.models.User;
+    this._Article = sequelize.models.Article;
   }
 
-  async findAll(count) {
+  async findAll(count, needArticles) {
+    const include = [
+      {
+        model: this._User,
+        as: Alias.USERS,
+        attributes: {
+          exclude: [`passwordHash`],
+        },
+      },
+    ];
+
+    if (needArticles) {
+      include.push({
+        model: this._Article
+      });
+    }
+
     const options = {
       order: [
         [`createdAt`, `DESC`]
       ],
-      include: [
-        {
-          model: this._User,
-          as: Alias.USERS,
-          attributes: {
-            exclude: [`passwordHash`],
-          },
-        },
-      ],
+      include,
     };
 
     if (count) {
