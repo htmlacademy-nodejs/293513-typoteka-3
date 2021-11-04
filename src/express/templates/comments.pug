@@ -10,12 +10,21 @@ block content
         each comment in comments
           li.publication__list-item
             .publication__header
-              img.publication__list-image(
-                src= `/img/${comment.users.avatar}`
-                width='20'
-                height='20'
-                alt= comment.users.name
-              )
+              if comment.users.avatar
+                img.publication__list-image(
+                  src= `/img/${comment.users.avatar}`
+                  width='20'
+                  height='20'
+                  alt= comment.users.name
+                )
+              else
+                span.avatar.publication__list-image(
+                  style={
+                    ['background-size']: 'contain',
+                    width: '20px',
+                    height: '20px'
+                  }
+                )
               b.publication__list-name
                 | #{comment.users.name} #{comment.users.surname}
 
