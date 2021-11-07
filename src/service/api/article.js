@@ -58,7 +58,7 @@ module.exports = (app, articleService, commentService) => {
     res.status(HttpCode.CREATED).json(article);
   });
 
-  route.put(`/:articleId`, [routeParamsValidator, articleValidator], async (req, res) => {
+  route.put(`/:articleId`, [routeParamsValidator, articleExists(articleService), articleValidator], async (req, res) => {
     const {articleId} = req.params;
 
     const updated = await articleService.update(articleId, req.body);

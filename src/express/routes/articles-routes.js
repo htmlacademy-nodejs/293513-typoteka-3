@@ -103,13 +103,9 @@ articlesRouter.post(`/edit/:id`, [upload.single(`upload`), csrfProtection], asyn
     categories: body.category || [],
     announce: body.announcement,
     fullText: body[`full-text`],
-    picture: '',
+    picture: file ? file.filename : body.photo,
     userId: user.id,
   };
-
-  if (file) {
-    articleData.picture = file.filename;
-  }
 
   try {
     await api.editArticle(id, articleData);
@@ -152,7 +148,7 @@ articlesRouter.post(`/:id/comments`, csrfProtection, async (req, res) => {
 
   try {
     await api.createComment(id, newComment);
-    res.redirect(`/articles/${id}`);
+    res.redirect(`/articles/${id}#comments`);
   } catch (err) {
     const validationMessages = prepareErrors(err);
     const [article, categories] = await Promise.all([

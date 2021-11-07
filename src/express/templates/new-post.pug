@@ -4,7 +4,6 @@ include mixins/error-message
 block content
   main
     section
-      pre= JSON.stringify(meta, null, 2)
       .popup.popup--new-publication.popup--anti
         .new-publication
           form(
@@ -87,6 +86,7 @@ block content
                       rows='5'
                       name='announcement'
                       placeholder='Анонс публикации'
+                      required
                     )= `${meta ? meta.article.announce : ''}`
                 .form__field.form__field--publication-text
                   label

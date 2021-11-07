@@ -8,6 +8,7 @@ class ArticleService {
     this._Article = sequelize.models.Article;
     this._Comment = sequelize.models.Comment;
     this._Category = sequelize.models.Category;
+    this._ArticleCategory = sequelize.models.ArticleCategory;
     this._User = sequelize.models.User;
   }
 
@@ -109,19 +110,23 @@ class ArticleService {
   }
 
   async findPage({limit, offset, comments, categoryId}) {
-    const category = {
-      model: this._Category,
-      as: Alias.CATEGORIES,
+    const articleCategory = {
+      model: this._ArticleCategory,
+      as: Alias.ARTICLE_CATEGORIES,
     };
 
     if (categoryId) {
-      category.where = {
-        id: categoryId,
+      articleCategory.where = {
+        CategoryId: categoryId,
       };
     }
 
     const include = [
-      category,
+      articleCategory,
+      {
+        model: this._Category,
+        as: Alias.CATEGORIES,
+      },
       {
         model: this._User,
         as: Alias.USERS,

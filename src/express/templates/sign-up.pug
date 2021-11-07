@@ -74,13 +74,8 @@ block content
 
             .form__image-loader
               a.form__avatar.avatar
-                -
-                  let src = 'img/icons/smile.svg'
-                  if (meta && meta.user.avatar) {
-                    src = `img/${meta.user.avatar}`
-                  }
                 img(
-                  src= src
+                  src='img/icons/smile.svg'
                   alt='аватар пользователя'
                 )
               label

@@ -13,6 +13,7 @@ const define = (sequelize) => {
         {through: models.ArticleCategory, as: Alias.CATEGORIES}
       );
       Article.belongsTo(models.User, {as: Alias.USERS, foreignKey: `userId`});
+      Article.hasMany(models.ArticleCategory, {as: Alias.ARTICLE_CATEGORIES});
     }
   }
 
