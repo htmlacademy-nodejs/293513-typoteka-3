@@ -10,7 +10,9 @@ block content
         h2.visually-hidden Основное содержание
         .post__wrapper
           .post__head
-            a.post__backwards.button.button--backwards(href='#') Назад
+            a.post__backwards.button.button--backwards(
+              onclick="window.history.back()"
+            ) Назад
 
             +dateTime(article.updatedAt)(class="post__date")
 

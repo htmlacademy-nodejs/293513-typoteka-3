@@ -31,7 +31,10 @@ block content
             if meta
               +errorMessages(meta.error)
 
-            a.popup__button.button.button--popup-close(aria-label='Закрыть окно')
+            a.popup__button.button.button--popup-close(
+              aria-label='Закрыть окно'
+              onclick="window.history.back()"
+            )
               | Закрыть
               | окно
 
