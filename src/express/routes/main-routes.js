@@ -5,7 +5,6 @@ const api = require(`../api`).getAPI();
 const asyncMiddleware = require(`../middlewares/async-middleware`);
 const {ARTICLE_PER_PAGE} = require(`../../constants`);
 const upload = require(`../middlewares/upload`);
-const auth = require(`../middlewares/auth`);
 const {prepareErrors} = require(`../../utils`);
 
 const mainRouter = new Router();
@@ -118,13 +117,13 @@ mainRouter.get(`/logout`, (req, res) => {
 
 mainRouter.get(`/search`, async (req, res) => {
   const {user} = req.session;
+  const {search} = req.query;
 
   try {
-    const {search} = req.query;
-    const results = await api.search(search.toLowerCase());
-    res.render(`search`, {results, search: search.toLowerCase()});
+    const results = await api.search(search);
+    res.render(`search`, {results, search, user});
   } catch (err) {
-    res.render(`search`, {results: [], search: req.query.search, user});
+    res.render(`search`, {results: [], search, user});
   }
 });
 

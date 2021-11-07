@@ -5,7 +5,10 @@ block content
     h1.visually-hidden Регистрация пользователя
     section
       .popup.popup--registration.popup--anti
-        a.popup__button.button.button--popup-close(aria-label='Закрыть окно')
+        a.popup__button.button.button--popup-close(
+          href="/"
+          aria-label='Закрыть окно'
+        )
           | Закрыть
           | окно
         h2.popup__title Регистрация
@@ -74,13 +77,8 @@ block content
 
             .form__image-loader
               a.form__avatar.avatar
-                -
-                  let src = 'img/icons/smile.svg'
-                  if (meta && meta.user.avatar) {
-                    src = `img/${meta.user.avatar}`
-                  }
                 img(
-                  src= src
+                  src='img/icons/smile.svg'
                   alt='аватар пользователя'
                 )
               label

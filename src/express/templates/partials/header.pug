@@ -34,6 +34,12 @@ header.header
           a.header__exit(href='/logout') Выйти
     a.header__avatar.avatar
       if user.avatar
-        img(src=`img/${user.avatar}`, alt= user.name)
+        img(
+          src=`img/${user.avatar}`
+          alt= user.name
+          style={
+            ['border-radius']: '50%',
+          }
+        )
 
   a.header__search.button.button--search(href='/search' aria-label='поиск по сайту')
