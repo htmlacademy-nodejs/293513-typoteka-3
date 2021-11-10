@@ -47,6 +47,20 @@ class CommentService {
     });
   }
 
+  async findOne(id) {
+    const include = [
+      {
+        model: this._User,
+        as: Alias.USERS,
+        attributes: {
+          exclude: [`passwordHash`],
+        },
+      },
+    ];
+
+    return await this._Comment.findByPk(id, {include});
+  }
+
   async remove(id) {
     const removedComment = await this._Comment.destroy({
       where: {id},
