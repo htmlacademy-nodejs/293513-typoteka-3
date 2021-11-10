@@ -53,7 +53,40 @@
     listComments.prepend(createComment(comment));
   };
 
-  socket.addEventListener(`comment:create`, (comment) => {
+  const createHotArticle = (article) => {
+    const hotArticleElement = document.createElement(`li`);
+    hotArticleElement.className = `hot__list-item`;
+
+    const link = document.createElement(`a`);
+    link.className = `hot__list-link`;
+    link.href = `/articles/${article.id}`;
+    link.innerHTML = `
+      ${article.announce.length > 100
+        ? `${article.announce.slice(0, 100)}...`
+        : article.announce}
+      <sup class="hot__link-sup">${article.commentsCount}</sup>
+    `;
+
+    hotArticleElement.append(link);
+
+    return hotArticleElement;
+  };
+
+  const updateHotArticles = (articles) => {
+    const list = document.querySelector(`.hot__list`);
+    const fragment = document.createDocumentFragment();
+
+    articles.forEach((article) => {
+      const articleEl = createHotArticle(article);
+      fragment.append(articleEl);
+    });
+
+    list.innerHTML = ``;
+    list.append(fragment);
+  }
+
+  socket.addEventListener(`comment:create`, ({comment, articles}) => {
+    updateHotArticles(articles);
     updateComments(comment);
   });
 })();

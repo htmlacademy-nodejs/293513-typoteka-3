@@ -1,7 +1,7 @@
 'use strict';
 
 const {Router} = require(`express`);
-const {HttpCode} = require(`../../constants`);
+const {HttpCode, MAX_COMMENTS} = require(`../../constants`);
 const articleValidator = require(`../middlewares/article-validator`);
 const articleExists = require(`../middlewares/article-exists`);
 const commentValidator = require(`../middlewares/comment-validator`);
@@ -108,8 +108,9 @@ module.exports = (app, articleService, commentService) => {
     const comment = await commentService.create(articleId, req.body);
 
     const commentData = await commentService.findOne(comment.id);
+    const articles = await articleService.findPopular(MAX_COMMENTS);
     const io = req.app.locals.socketio;
-    io.emit(`comment:create`, commentData);
+    io.emit(`comment:create`, {comment: commentData, articles});
 
     res.status(HttpCode.CREATED).json(comment);
   });
