@@ -1,10 +1,12 @@
 'use strict';
 
 const express = require(`express`);
+const http = require(`http`);
 const {HttpCode, ExitCode, FilePath} = require(`../../constants`);
 const routes = require(`../api/api`);
 const {getLogger} = require(`../lib/logger`);
 const sequelize = require(`../lib/sequelize`);
+const socket = require(`../lib/socket`);
 
 module.exports = {
   name: `--server`,
@@ -23,6 +25,9 @@ module.exports = {
     }
 
     const app = express();
+    const server = http.createServer(app);
+
+    app.locals.socketio = socket(server);
 
     app.use(express.json());
 
@@ -50,7 +55,7 @@ module.exports = {
     const [customPort] = args;
     const port = Number.parseInt(customPort, 10) || DEFAULT_PORT;
 
-    app.listen(port, () => {
+    server.listen(port, () => {
       logger.info(`Listening to connection on ${port}`);
     }).on(`error`, (err) => {
       logger.error(`An error occurred on server created ${err.message}`);

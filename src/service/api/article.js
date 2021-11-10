@@ -107,6 +107,10 @@ module.exports = (app, articleService, commentService) => {
 
     const comment = await commentService.create(articleId, req.body);
 
+    const commentData = await commentService.findOne(comment.id);
+    const io = req.app.locals.socketio;
+    io.emit(`comment:create`, commentData);
+
     res.status(HttpCode.CREATED).json(comment);
   });
 };
