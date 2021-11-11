@@ -1,11 +1,6 @@
 mixin shortText(text)
   -
+    var MAX_LENGTH_TEXT = 100;
     var length = text.length;
-    var result
 
-    if (length > 100) {
-      result = `${text.slice(0, 100)}...`
-    } else {
-      result = text
-    }
-  | #{result}
+  | #{length > MAX_LENGTH_TEXT ? `${text.slice(0, MAX_LENGTH_TEXT)}...` : text}

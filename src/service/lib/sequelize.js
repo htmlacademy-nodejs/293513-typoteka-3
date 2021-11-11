@@ -34,18 +34,18 @@ if (somethingIsNotDefined) {
 const logger = getLogger({name: `DB`});
 
 module.exports = new Sequelize(
-  DB_NAME,
-  DB_USER,
-  DB_PASSWORD, {
-    host: DB_HOST,
-    port: DB_PORT,
-    dialect: `postgres`,
-    pool: {
-      min: Number(DB_POOL_MIN_CONNECTION) || DbPoolConnection.MIN,
-      max: Number(DB_POOL_MAX_CONNECTION) || DbPoolConnection.MAX,
-      acquire: DB_POLL_ACQUIRE,
-      idle: DB_POLL_IDLE,
+    DB_NAME,
+    DB_USER,
+    DB_PASSWORD, {
+      host: DB_HOST,
+      port: DB_PORT,
+      dialect: `postgres`,
+      pool: {
+        min: Number(DB_POOL_MIN_CONNECTION) || DbPoolConnection.MIN,
+        max: Number(DB_POOL_MAX_CONNECTION) || DbPoolConnection.MAX,
+        acquire: DB_POLL_ACQUIRE,
+        idle: DB_POLL_IDLE,
+      },
+      logging: logger.debug.bind(logger),
     },
-    logging: logger.debug.bind(logger),
-  },
 );

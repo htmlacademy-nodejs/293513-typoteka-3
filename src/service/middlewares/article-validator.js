@@ -15,7 +15,7 @@ const ErrorArticleMessage = {
 
 const schema = Joi.object({
   categories: Joi.array().items(
-    Joi.number().integer().positive()
+      Joi.number().integer().positive()
   ).min(1).required().messages({
     'array.min': ErrorArticleMessage.CATEGORIES,
   }),
@@ -27,10 +27,10 @@ const schema = Joi.object({
     'string.min': ErrorArticleMessage.ANNOUNCE_MIN,
     'string.max': ErrorArticleMessage.ANNOUNCE_MAX,
   }),
-  fullText: Joi.string().optional().allow('').max(1000).messages({
+  fullText: Joi.string().optional().allow(``).max(1000).messages({
     'string.max': ErrorArticleMessage.FULL_TEXT_MAX,
   }),
-  picture: Joi.string().optional().allow(''),
+  picture: Joi.string().optional().allow(``),
   createdDate: Joi.string(),
   userId: Joi.number().integer().positive().required().messages({
     'number.base': ErrorArticleMessage.USER_ID

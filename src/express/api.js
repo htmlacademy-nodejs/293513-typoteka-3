@@ -1,7 +1,7 @@
 'use strict';
 
 const axios = require(`axios`);
-const {HttpMethod} = require('../constants');
+const {HttpMethod} = require(`../constants`);
 const {getLogger} = require(`../service/lib/logger`);
 
 const logger = getLogger({name: `api`});
@@ -15,16 +15,6 @@ class API {
       baseURL,
       timeout,
     });
-  }
-
-  async _load(url, options) {
-    try {
-      const {data} = await this._http.request(({url, ...options}));
-      return data;
-    } catch (e) {
-      logger.error(e);
-      throw e;
-    }
   }
 
   getArticles({offset, limit, comments, categoryId} = {}) {
@@ -132,6 +122,16 @@ class API {
       method: HttpMethod.POST,
       data: {email, password}
     });
+  }
+
+  async _load(url, options) {
+    try {
+      const {data} = await this._http.request(({url, ...options}));
+      return data;
+    } catch (e) {
+      logger.error(e);
+      throw e;
+    }
   }
 }
 

@@ -30,7 +30,7 @@ const schema = Joi.object({
   passwordRepeated: Joi.string().required().valid(Joi.ref(`password`)).messages({
     'any.only': ErrorRegisterMessage.PASSWORD_REPEATED,
   }),
-  avatar: Joi.string().optional().allow(''),
+  avatar: Joi.string().optional().allow(``),
 });
 
 module.exports = (service) => async (req, res, next) => {

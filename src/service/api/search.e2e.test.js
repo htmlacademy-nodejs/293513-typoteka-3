@@ -22,7 +22,7 @@ beforeAll(async () => {
     users: await getMockUsers(),
   });
   search(app, new SearchService(mockDB));
-})
+});
 
 describe(`API returns articles based on search query`, () => {
   let response;

@@ -66,7 +66,7 @@ mainRouter.post(`/register`, upload.single(`upload`), async (req, res) => {
         avatar: userData.avatar,
       },
       errors: validationMessages,
-    }
+    };
 
     req.session.meta = meta;
     req.session.save(() => {
@@ -102,7 +102,7 @@ mainRouter.post(`/login`, async (req, res) => {
     req.session.meta = meta;
 
     req.session.save(() => {
-      res.render(`login`, {meta})
+      res.render(`login`, {meta});
     });
   }
 });

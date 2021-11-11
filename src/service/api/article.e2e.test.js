@@ -206,7 +206,7 @@ describe(`API returns a list of comments to given article`, () => {
   test(`Status code 200`, () => expect(response.statusCode).toBe(HttpCode.OK));
   test(`Returns list of 3 comments`, () => expect(response.body.length).toBe(3));
   test(`Third comment's text is "Планируете записать видосик на эту тему? Согласен с автором!"`, () => {
-    expect(response.body[2].text).toBe(`Планируете записать видосик на эту тему? Согласен с автором!`)
+    expect(response.body[2].text).toBe(`Планируете записать видосик на эту тему? Согласен с автором!`);
   });
 });
 
