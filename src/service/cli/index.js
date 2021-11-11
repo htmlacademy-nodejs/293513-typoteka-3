@@ -6,14 +6,10 @@ const filldb = require(`./filldb`);
 const server = require(`./server`);
 const fill = require(`./fill`);
 
-const Cli = {
+module.exports = {
   [help.name]: help,
   [version.name]: version,
   [filldb.name]: filldb,
   [server.name]: server,
   [fill.name]: fill,
-};
-
-module.exports = {
-  Cli,
 };

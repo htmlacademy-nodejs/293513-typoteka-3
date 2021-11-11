@@ -74,12 +74,12 @@ module.exports = {
     }
 
     const articles = generateArticles(
-      countArticles,
-      titles,
-      categories,
-      sentences,
-      comments,
-      users,
+        countArticles,
+        titles,
+        categories,
+        sentences,
+        comments,
+        users,
     );
 
     await initDb(sequelize, {articles, categories, users});

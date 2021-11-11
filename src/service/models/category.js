@@ -7,7 +7,7 @@ const define = (sequelize) => {
   class Category extends Model {
     static associate(models) {
       Category.belongsToMany(models.Article,
-        {through: models.ArticleCategory, as: Alias.ARTICLES}
+          {through: models.ArticleCategory, as: Alias.ARTICLES}
       );
       Category.hasMany(models.ArticleCategory, {as: Alias.ARTICLE_CATEGORIES});
     }
@@ -21,7 +21,7 @@ const define = (sequelize) => {
   }, {
     sequelize,
     modelName: `Category`,
-    tableName: 'categories',
+    tableName: `categories`,
   });
 
   return Category;

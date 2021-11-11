@@ -17,7 +17,7 @@ const getMockUsers = async () => [
     avatar: `eeiseMYIc8.jpg`,
     passwordHash: await passwordUtils.hash(`petrov`),
   }
-]
+];
 
 const mockCategories = [
   `За жизнь`,

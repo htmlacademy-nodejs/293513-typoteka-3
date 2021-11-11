@@ -35,10 +35,10 @@ const define = (sequelize) => {
   }, {
     sequelize,
     modelName: `User`,
-    tableName: 'users',
+    tableName: `users`,
   });
 
   return User;
-}
+};
 
 module.exports = define;

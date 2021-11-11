@@ -3,6 +3,7 @@
 (() => {
   const SERVER_URL = `http://localhost:3000`;
   const COUNT_LAST_COMMENTS = 4;
+  const MAX_LENGTH_TEXT = 100;
 
   const socket = io(SERVER_URL);
 
@@ -34,8 +35,8 @@
 
     const link = document.createElement(`a`);
     link.className = `last__list-link`;
-    link.textContent = comment.text.length > 100
-      ? `${comment.text.slice(0, 100)}...`
+    link.textContent = comment.text.length > MAX_LENGTH_TEXT
+      ? `${comment.text.slice(0, MAX_LENGTH_TEXT)}...`
       : comment.text;
     commentElement.append(link);
 
@@ -61,8 +62,8 @@
     link.className = `hot__list-link`;
     link.href = `/articles/${article.id}`;
     link.innerHTML = `
-      ${article.announce.length > 100
-        ? `${article.announce.slice(0, 100)}...`
+      ${article.announce.length > MAX_LENGTH_TEXT
+        ? `${article.announce.slice(0, MAX_LENGTH_TEXT)}...`
         : article.announce}
       <sup class="hot__link-sup">${article.commentsCount}</sup>
     `;
